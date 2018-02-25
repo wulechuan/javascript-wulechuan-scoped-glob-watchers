@@ -1,0 +1,35 @@
+{
+  "name": "@wulechuan/scoped-glob-watchers",
+  "version": "0.0.1",
+  "description": "A controller that manages multiple watchers, each watcher has a scope over a certain set of globs.",
+  "author": "wulechuan <wulechuan@live.com>",
+  "license": "WTFPL",
+  "keywords": [
+    "File",
+    "system",
+    "watcher",
+    "glob",
+    "watcher",
+    "watcher",
+    "file",
+    "watcher"
+  ],
+  "main": "source/index.js",
+  "directories": {
+    "tryoutDummyProject": "try-it-out/a-dummy-project"
+  },
+  "scripts": {
+    "gulp": " gulp --gulpfile ./gulpfile.js --silent --",
+    "gulpRaw": "gulp --gulpfile ./gulpfile.js --",
+    "start": "npm run gulp"
+  },
+  "dependencies": {
+    "chalk": "^2.3.1",
+    "gaze": "^1.1.2",
+    "moment": "^2.20.1",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1"
+  }
+}
