@@ -1,7 +1,7 @@
 {
   "name": "@wulechuan/scoped-glob-watchers",
   "version": "0.0.1",
-  "description": "A controller that manages multiple watchers, each watcher has a scope over a certain set of globs.",
+  "description": "A file/glob lazy watchers controller, with scopes defined, each said scope a watcher.",
   "author": "wulechuan <wulechuan@live.com>",
   "license": "WTFPL",
   "keywords": [
@@ -23,6 +23,14 @@
     "gulpRaw": "gulp --gulpfile ./gulpfile.js --",
     "start": "npm run gulp"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wulechuan/javascript-wulechuan-scoped-glob-watchers.git"
+  },
+  "bugs": {
+    "url": "https://github.com/wulechuan/javascript-wulechuan-scoped-glob-watchers/issues"
+  },
+  "homepage": "https://github.com/wulechuan/javascript-wulechuan-scoped-glob-watchers#readme",
   "dependencies": {
     "chalk": "^2.3.1",
     "gaze": "^1.1.2",
