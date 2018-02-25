@@ -1,6 +1,8 @@
 # Introduction
 
-This is a lazy watchers controller for globs/files. Currently utilizing the gaze as the underlying file watching engine. Though theoretically it could connect to any other watching engine, as long as a connector is provided.
+This is a lazy watchers controller for globs/files.
+
+Currently it utilizes the [gaze](https://github.com/shama/gaze) as the underlying file watching engine. Though theoretically it could connect to any other watching engine, as long as a connector is provided.
 
 # Usage
 
