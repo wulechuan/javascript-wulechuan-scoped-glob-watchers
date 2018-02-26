@@ -2,7 +2,7 @@
 
 This is a lazy watchers controller for globs/files.
 
-A watcher is called a **lazy** one is because when an file changing event issues, the watcher doesn't take actions bound to that file change immediately, but rather waits for a short period of time (*by default 900 milli seconds*) to gather more changes of files, be those changes happen to be of the same file, or not. When the time is up for the said wait, the watcher act as desired. This meshanism is meaningful in lots of cases where a batch of files change almost at the same time while they all are bound to the same action, and they are meant to share the single take of the action.
+A watcher is called a **lazy** one is because when a file changing event issues, the watcher doesn't take actions bound to that file change immediately, but rather waits for a short period of time (*by default 900 milli seconds*) to gather more changes of files, be those changes happen to be of the same file, or not. When the time is up for the said wait, the watcher act as desired. This meshanism is meaningful in lots of cases where a batch of files change almost at the same time while they all are bound to the same action, and they are meant to share the single take of the action.
 
 Say we are saving a bounch of files via a shortcut key in a powerful code editor, like using the "<kbd>Ctrl+k s</kbd>" in [Microsoft Visual Studio Code](https://code.visualstudio.com/). When several `.styl` files might change at the same time, but a single compilation action is expected to be taken upon all these changes.
 
