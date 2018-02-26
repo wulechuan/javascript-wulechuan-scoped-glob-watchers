@@ -45,10 +45,6 @@ function LazyWatcherClass(scopeId, constructionOptions) {
 		actionToTake,
 	} = constructionOptions;
 
-
-
-
-
 	if (! scopeId) {
 		throw new TypeError(chalk.bgRed.black(` Arguments[${chalk.white(0)}] ("${
 			chalk.white('scopeId')}"): Must be a non empty string. `));
@@ -74,6 +70,7 @@ function LazyWatcherClass(scopeId, constructionOptions) {
 
 
 	let isConstructingInstance = true;
+
 	const thisWatcher = this;
 
 	const scopeIdPrintingString = LazyWatcherClass.getPrettyPrintingStringOfScopeId(scopeId);
@@ -82,7 +79,7 @@ function LazyWatcherClass(scopeId, constructionOptions) {
 		basePath = process.cwd(),
 		delayTimeForTakingAction = defaultConfiguration.delayTimeInMilliSecondsForGatheringEvents,
 		shouldNotConnectToAnyUnderlyingEngineOnConstruction = false,
-		shouldTakeActionOnConstuction = false,
+		shouldTakeActionOnWatcherCreation = false,
 		underlyingWatchEngineIdToUse = '',
 		shouldLogVerbosely = false,
 	} = constructionOptions;
@@ -163,19 +160,30 @@ function LazyWatcherClass(scopeId, constructionOptions) {
 	thisWatcher.onUnderlyingWatchEngineDisconnected = undefined;
 
 
-	if (shouldTakeActionOnConstuction) {
-		takeActionOnce(true, {
-			extraMessage: 'before connecting to any underlying watch engine',
-			shouldNotPrintInvolvedFileList: true,
-		});
-	}
-
-	if (! shouldNotConnectToAnyUnderlyingEngineOnConstruction) {
-		connectToUnderlyingWatchEngine(underlyingWatchEngineIdToUse);
-	}
+	init();
 
 	isConstructingInstance = false;
 
+
+
+
+
+
+
+
+
+	function init() {
+		if (shouldTakeActionOnWatcherCreation) {
+			takeActionOnce(true, {
+				extraMessage: 'before connecting to any underlying watch engine',
+				shouldNotPrintInvolvedFileList: true,
+			});
+		}
+
+		if (! shouldNotConnectToAnyUnderlyingEngineOnConstruction) {
+			connectToUnderlyingWatchEngine(underlyingWatchEngineIdToUse);
+		}
+	}
 
 	function toNormalizeGlobs(rawGlobs, toNormalizeOneGlob) {
 		return rawGlobs.map(toNormalizeOneGlob);

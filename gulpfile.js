@@ -5,7 +5,7 @@ const gulp = require('gulp');
 const pathTool = require('path');
 const { join: joinPath } = pathTool;
 
-const categorizedGlobsLazilyWatchingMechanism = require('.');
+const scopedGlobsLazilyWatchingMechanism = require('.');
 
 /*
 *
@@ -101,25 +101,25 @@ function delayAnActionWithinTimeRange(minTime, maxTime, action) {
 // Tasks that builds and watches
 const scopedWatchingSettings = {
 	'My Lovely Images': {
-		globsToWatch: sourceGlobsOfImagesToWatch,
-		actionToTake: taskBodyOfCopyingImages,
-		shouldTakeActionOnConstuction: true,
+		globsToWatch:                      sourceGlobsOfImagesToWatch,
+		actionToTake:                      taskBodyOfCopyingImages,
+		shouldTakeActionOnWatcherCreation: true,
 	},
 	'CSS: Stylus': {
-		globsToWatch: sourceGlobsOfStylusToWatch,
-		actionToTake: taskBodyOfCompilingStylus,
-		shouldTakeActionOnConstuction: true,
+		globsToWatch:                      sourceGlobsOfStylusToWatch,
+		actionToTake:                      taskBodyOfCompilingStylus,
+		shouldTakeActionOnWatcherCreation: true,
 	},
 	'Javascript': {
-		globsToWatch: sourceGlobsOfJavascriptToWatch,
-		actionToTake: taskBodyOfCompilingJavascripts,
-		shouldTakeActionOnConstuction: true,
+		globsToWatch:                      sourceGlobsOfJavascriptToWatch,
+		actionToTake:                      taskBodyOfCompilingJavascripts,
+		shouldTakeActionOnWatcherCreation: true,
 	},
 };
 
 
 gulp.task('build and then watch: everything', (thisTaskIsDone) => {
-	categorizedGlobsLazilyWatchingMechanism.createWatchersAccordingTo(scopedWatchingSettings, {
+	scopedGlobsLazilyWatchingMechanism.createWatchersAccordingTo(scopedWatchingSettings, {
 		basePath: npmProjectRootPath,
 		// shouldLogVerbosely: false,
 	});
