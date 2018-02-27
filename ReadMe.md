@@ -76,7 +76,7 @@ gulp.task('build and then watch: everything', (thisTaskIsDone) => {
 There is a dummy project includes in this repository,
 so that people can try this watchers controller without difficulty.
 
-> The said dummy project locates at `<this repository root folder>/try-it-out/a-dummy-project`.
+The said dummy project locates at `<this repository root folder>/try-it-out/a-dummy-project`.
 
 A npm script entry of this repository has been setup
 to run an instance of this watchers controller,
@@ -99,10 +99,10 @@ Keep an eye on the console/terminal, you should see beatiful messages logged the
 See some snapshots of mine:
 
 At the moment the script just start:
-![Just started](./docs/illustrates/npm-start-snapshot-01.png)
+![Just started](./docs/illustrates/npm-start-snapshot-01.png) "right after npm start"
 
 After some changes are made:
-![Just started](./docs/illustrates/npm-start-snapshot-02.png)
+![After Some Changes](./docs/illustrates/npm-start-snapshot-02.png) "after some changes are made"
 
 <br/>
 <br/>
