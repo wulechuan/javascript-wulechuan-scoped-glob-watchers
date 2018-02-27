@@ -1,5 +1,3 @@
-/* eslint no-console: 0, global-require: 0, no-buffer-constructor: 0, indent: [ 2, 'tab' ], no-tabs: 0 */
-
 const gulp = require('gulp');
 
 const pathTool = require('path');
@@ -16,10 +14,11 @@ const scopedGlobsLazilyWatchingMechanism = require('.');
 *
 * ****************************************
 *               整理环境常量
+*             Env. Constants
 * ****************************************
 */
 
-// --------------- 基本常量 ---------------
+// --------------- 基本常量 (Basic) ---------------
 
 const npmProjectRootPath = process.cwd();
 const packageJSON = require(joinPath(npmProjectRootPath, 'package.json')); // eslint-disable-line import/no-dynamic-require
@@ -51,7 +50,8 @@ const sourceGlobsOfJavascriptToWatch = [
 *
 *
 * *****************************************************
-*       加载与任务相关的自定义通用工具；构建任务主体函数
+*                    构建任务主体函数
+*                     Task Bodies
 * *****************************************************
 */
 
@@ -95,10 +95,12 @@ function delayAnActionWithinTimeRange(minTime, maxTime, action) {
 *
 * ****************************************
 *                  任务集
+*                  Tasks
 * ****************************************
 */
 
-// Tasks that builds and watches
+// Three scopes are defined below.
+// And three watchers will be created for them each.
 const scopedWatchingSettings = {
 	'My Lovely Images': {
 		globsToWatch:                      sourceGlobsOfImagesToWatch,
@@ -119,10 +121,13 @@ const scopedWatchingSettings = {
 
 
 gulp.task('build and then watch: everything', (thisTaskIsDone) => {
-	scopedGlobsLazilyWatchingMechanism.createWatchersAccordingTo(scopedWatchingSettings, {
-		basePath: npmProjectRootPath,
-		// shouldLogVerbosely: false,
-	});
+	scopedGlobsLazilyWatchingMechanism.createWatchersAccordingTo(
+		scopedWatchingSettings,
+		{
+			basePath: npmProjectRootPath,
+			// shouldLogVerbosely: false,
+		}
+	);
 
 	thisTaskIsDone();
 });

@@ -524,7 +524,7 @@ LazyWatcherClass.logABatchOfInvolvedFilesForScope = (scopeId, detailsOfThisBatch
 
 	console.log(`\n${
 		chalk.gray(formatTimestamp(detailsOfThisBatch.timestamp))
-	} ${labelString} on scope ${
+	} ${labelString}${chalk.bgWhite.black(' on scope ')}${
 		LazyWatcherClass.getPrettyPrintingStringOfScopeId(scopeId)
 	}${extraMessage ? `\n${' '.repeat(9)}${extraMessage}` : ''}...`);
 
