@@ -14,7 +14,7 @@ This is a controller for multiple scoped lazy watchers upon globs/files.
 <br/>
 <br/>
 
-## Scopes
+## Scopes and Actions
 
 A scope here means one or several globs.
 A given watcher watches every file the said globs cover.
@@ -23,17 +23,18 @@ a pre-defined action will be taken to response that change.
 The response, aka the action ,make the watcher meaningful.
 Otherwise, why do we watch a file?
 
-*In words, a scope is mapped to an action by a watcher.*
+**_In words, a scope is mapped to an action by a watcher._**
 
 > The term `glob` basically means a description
 > on how we can select some files we are interested in.
+>
 > See: https://www.npmjs.com/package/glob#glob-primer
 
 It's worth to mention that a certain file is allowed and often needed to
 be covered in several scopes. So that when the said file changes,
 several actions will be taken at the same time.
 
-*In words, one change might cause multiple actions.*
+**_In words, one change might cause multiple actions._**
 
 <br/>
 <br/>
@@ -87,6 +88,16 @@ as long as a connector is provided (which is not).
 
 # Usage
 
+An npm script entry of this repository has been setup
+to run an instance of this watchers controller,
+utilizing [gulp](https://gulpjs.com/).
+So people can try it out right here inside this repository
+before they decide to use it elsewhere.
+
+See below [Try It Out, See It in Action](#Try-It-Out--See-It-in-Action).
+
+<br/>
+
 ## Example Codes
 
 See the `gulpfile.js` included by this repository as an example.
@@ -135,27 +146,35 @@ gulp.task('build and then watch: everything', (thisTaskIsDone) => {
 <br/>
 <br/>
 
-## Try it out
+## Try It Out, See It in Action
+
+### How to start your trying
 
 There is a dummy project includes in this repository,
 so that people can try this watchers controller without difficulty.
 
-The said dummy project locates at
+The said dummy project locates here:
 ```sh
 <this repository root folder>/try-it-out/a-dummy-project
 ```
 
 <br/>
 
-A npm script entry of this repository has been setup
-to run an instance of this watchers controller,
-utilizing [gulp](https://gulpjs.com/).
+To start trying, you might first need to
+install dependencies for this npm project, if you haven't yet.
+
+Open a console/terminal and run:
+```sh
+npm install
+```
 
 
-To start, simply open a console/terminal and run:
+then, simply run:
 ```sh
 npm start
 ```
+That's it.
+
 
 When the script is running,
 the controller first create 3 watchers,
@@ -172,11 +191,15 @@ Then you can randomly make changes to those files.
 For example you can modify contents of some files,
 create some new files,
 or delete existing ones.
+
 Keep an eye on the console/terminal,
 you should see beautiful messages logged there.
 
 
-See some snapshots of mine:
+### Some snapshots of mine
+
+Here are some snapshots of my console,
+hosted inside the Microsoft Visual Studio Code.
 
 At the moment the script just start:
 ![Just started](./docs/illustrates/npm-start-snapshot-01.png "right after npm start")
