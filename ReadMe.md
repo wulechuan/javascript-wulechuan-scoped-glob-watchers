@@ -99,10 +99,10 @@ Keep an eye on the console/terminal, you should see beatiful messages logged the
 See some snapshots of mine:
 
 At the moment the script just start:
-![Just started](./docs/illustrates/npm-start-snapshot-01.png) "right after npm start"
+![Just started](./docs/illustrates/npm-start-snapshot-01.png "right after npm start")
 
 After some changes are made:
-![After Some Changes](./docs/illustrates/npm-start-snapshot-02.png) "after some changes are made"
+![After Some Changes](./docs/illustrates/npm-start-snapshot-02.png "after some changes are made")
 
 <br/>
 <br/>
