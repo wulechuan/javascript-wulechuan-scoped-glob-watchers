@@ -43,7 +43,7 @@ several actions will be taken at the same time.
 
 A watcher is called a **lazy** one is because when a file changing event issues,
 the watcher doesn't take actions bound to that change immediately,
-but rather waits for a short period of time (*by default `900` milli seconds*)
+but rather waits for a short period of time (*by default `900` milliseconds*)
 to gather more changes of files,
 be those changes happen to be of the same file, or not.
 When the time is up for the said wait, the watcher acts as desired.
