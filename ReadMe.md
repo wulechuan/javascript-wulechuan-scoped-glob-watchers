@@ -20,7 +20,7 @@ A scope here means one or several globs.
 A given watcher watches every file the said globs cover.
 Whenever some change happened to any of those files,
 a pre-defined action will be taken to response that change.
-The response, aka the action ,make the watcher meaningful.
+The response, aka the action, makes the watcher meaningful.
 Otherwise, why do we watch a file?
 
 **_In words, a scope is mapped to an action by a watcher._**
