@@ -148,8 +148,6 @@ gulp.task('build and then watch: everything', (thisTaskIsDone) => {
 
 ## Try It Out, See It in Action
 
-### How to start your trying
-
 There is a dummy project included within this repository,
 so that people can try this watchers controller without difficulty.
 
@@ -159,13 +157,13 @@ The said dummy project locates here:
 ```
 
 
-#### Before you try
+#### Before You Try
 
 Before you can start trying,
 you first need to install all dependencies for this npm project.
 
 > This is a one time action, you don't need to do it
-> before every time you run the tryout script.
+> every time before you run the tryout script.
 
 Open a console/terminal and run:
 ```sh
@@ -186,9 +184,19 @@ That's it.
 
 #### What to Try?
 
-When the script is running,
-the controller first create 3 watchers,
+Now the script is up and running,
+what should we do to see something meaningful?
+
+Well, the controller first create 3 watchers,
 each for a scope covering some files in the dummy project.
+
+Then you can randomly make changes to those files.
+For example you can modify contents of some files and save them,
+you can create some new files,
+or you can delete existing ones.
+
+Keep an eye on the console/terminal,
+you should see beautiful messages logged there.
 
 > Note that the scopes are designed in together
 > to cover **all** files in that project.
@@ -198,14 +206,6 @@ each for a scope covering some files in the dummy project.
 > Also note that it's the *dummy project* files
 > that are watched,
 > **not** the source files of this repository.
-
-Then you can randomly make changes to those files.
-For example you can modify contents of some files and save them,
-you can create some new files,
-or you can delete existing ones.
-
-Keep an eye on the console/terminal,
-you should see beautiful messages logged there.
 
 <br/>
 
