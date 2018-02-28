@@ -1,4 +1,5 @@
-/docs
 .vscode
-/try-it-out
 .eslintrc*
+/docs
+/try-it-out
+/gulpfile.js
