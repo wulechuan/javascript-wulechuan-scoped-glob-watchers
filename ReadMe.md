@@ -230,4 +230,4 @@ After some changes are made:
 Sorry. I don't have too much spare time at present.
 I have my boy to take care of.
 
-Consume my *ugly* source codes if you'd like to. :p
+Consult my *ugly* source codes if you'd like to. :p
