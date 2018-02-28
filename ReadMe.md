@@ -102,7 +102,7 @@ See below [Try It Out, See It in Action](#try-it-out-see-it-in-action).
 
 See the `gulpfile.js` included by this repository as an example.
 
-Below are the key snippets from the said `gulpfile.js`.
+Below are the key snippet from the said `gulpfile.js`.
 
 ```javascript
 const npmProjectRootPath = prosess.cwd();
@@ -150,7 +150,7 @@ gulp.task('build and then watch: everything', (thisTaskIsDone) => {
 
 ### How to start your trying
 
-There is a dummy project includes in this repository,
+There is a dummy project included within this repository,
 so that people can try this watchers controller without difficulty.
 
 The said dummy project locates here:
@@ -158,50 +158,63 @@ The said dummy project locates here:
 <this repository root folder>/try-it-out/a-dummy-project
 ```
 
-<br/>
 
-To start trying, you might first need to
-install dependencies for this npm project, if you haven't yet.
+#### Before you try
+
+Before you can start trying,
+you first need to install all dependencies for this npm project.
+
+> This is a one time action, you don't need to do it
+> before every time you run the tryout script.
 
 Open a console/terminal and run:
 ```sh
 npm install
 ```
+or even simpler:
+```sh
+npm i
+```
 
+#### Run the Tryout Script
 
-then, simply run:
+Open a console/terminal and run:
 ```sh
 npm start
 ```
 That's it.
 
+#### What to Try?
 
 When the script is running,
 the controller first create 3 watchers,
 each for a scope covering some files in the dummy project.
 
-> Note that the scopes are designed to together cover all files in that project.
-> So any file change will for sure cause some action.
+> Note that the scopes are designed in together
+> to cover **all** files in that project.
+> So basically **any** file change
+> will for sure trigger some action.
 
-<br/>
-
-> Also note that it's the dummy project files that are watched, **not** the source files of this repository.
+> Also note that it's the *dummy project* files
+> that are watched,
+> **not** the source files of this repository.
 
 Then you can randomly make changes to those files.
-For example you can modify contents of some files,
-create some new files,
-or delete existing ones.
+For example you can modify contents of some files and save them,
+you can create some new files,
+or you can delete existing ones.
 
 Keep an eye on the console/terminal,
 you should see beautiful messages logged there.
 
+<br/>
 
 ### Some snapshots of mine
 
 Here are some snapshots of my console,
-hosted inside the Microsoft Visual Studio Code.
+hosted within Microsoft Visual Studio Code.
 
-At the moment the script just start:
+At the moment the script just starts:
 ![Just started](./docs/illustrates/npm-start-snapshot-01.png "right after npm start")
 
 After some changes are made:
@@ -217,4 +230,4 @@ After some changes are made:
 Sorry. I don't have too much spare time at present.
 I have my boy to take care of.
 
-Cosume my *ugly* source codes if you'd like to. :p
+Consume my *ugly* source codes if you'd like to. :p
