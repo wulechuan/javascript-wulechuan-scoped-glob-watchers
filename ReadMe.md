@@ -209,7 +209,7 @@ you should see beautiful messages logged there.
 
 <br/>
 
-### Some snapshots of mine
+### Some Snapshots of Mine
 
 Here are some snapshots of my console,
 hosted within Microsoft Visual Studio Code.
