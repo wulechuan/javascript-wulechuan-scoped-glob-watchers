@@ -362,7 +362,8 @@ function LazyWatcherClass(scopeId, constructionOptions) {
 
 		const fileRecord = {
 			timestamp,
-			typeOfChange: typeOfTheChange,
+			typeOfChange: currentUnderlyingWatchEngineConnector.alignedEventTypeOfEventRawType[typeOfTheChange],
+			rawTypeOfChange: typeOfTheChange,
 			file: involvedFileNormalizedPath,
 			scopeId,
 		};
@@ -537,64 +538,60 @@ LazyWatcherClass.logABatchOfInvolvedFilesForScope = (scopeId, detailsOfThisBatch
 LazyWatcherClass.getLoggingTermAndStyleForAnEvent = (typeOfTheChange) => {
 	let loggingKeyColor;
 	let loggingKeyBgColor;
-	let termOfEventType;
-	let termOfEventTypePadding = '';
+	let termOfEventType = typeOfTheChange;
+	let termOfEventTypeButInAlignedWidth = '';
 
-	const termCreated = 'Created';
-	const termDeleted = 'Deleted';
-	const termRenamed = 'Renamed';
-	const termModified = 'Modified';
-	const termOfUnknownType = 'Change of unknown type';
+	const termForAddition      = 'Added';
+	const termForDisappearance = 'Disappeared';
+	const termForRenaming      = 'Renamed';
+	const termForModification  = 'Modified';
+	const termForUnknownType   = 'Change of unknown type';
 
-	const termsAlignedLength = Math.max(
+	const termsAlignedWidth = Math.max(
 		// termUnknownType.length,
-		termCreated.length,
-		termDeleted.length,
-		termRenamed.length,
-		termModified.length
+		termForAddition.length,
+		termForDisappearance.length,
+		termForRenaming.length,
+		termForModification.length
 	);
 
 	/* eslint-disable indent */
 	switch (typeOfTheChange) {
-		case 'changed':
-			loggingKeyColor = 'blue';
+		case termForModification:
+			loggingKeyColor   = 'blue';
 			loggingKeyBgColor = 'bgBlue';
-			termOfEventType = termModified;
 			break;
 
-		case 'added':
-			loggingKeyColor = 'green';
+		case termForAddition:
+			loggingKeyColor   = 'green';
 			loggingKeyBgColor = 'bgGreen';
-			termOfEventType = termCreated;
 			break;
 
-		case 'deleted':
-			loggingKeyColor = 'red';
+		case termForDisappearance:
+			loggingKeyColor   = 'red';
 			loggingKeyBgColor = 'bgRed';
-			termOfEventType = termDeleted;
 			break;
 
-		case 'renamed':
-			loggingKeyColor = 'cyan';
+		case termForRenaming:
+			loggingKeyColor   = 'cyan';
 			loggingKeyBgColor = 'bgCyan';
-			termOfEventType = termRenamed;
 			break;
 
 		default:
-			loggingKeyColor = 'black';
+			termOfEventType   = termForUnknownType;
+			loggingKeyColor   = 'black';
 			loggingKeyBgColor = 'bgWhite';
-			termOfEventType = termOfUnknownType;
 			break;
 	}
 	/* eslint-enable indent */
 
-	termOfEventTypePadding = ' '.repeat(Math.max(0, termsAlignedLength - termOfEventType.length));
+	termOfEventTypeButInAlignedWidth = ' '.repeat(Math.max(0, termsAlignedWidth - termOfEventType.length));
 
 	return {
 		loggingKeyColor,
 		loggingKeyBgColor,
 		termOfEventType,
-		termOfEventTypePadding,
+		termOfEventTypeInAlignedWidth: termOfEventTypeButInAlignedWidth,
 	};
 };
 
@@ -611,7 +608,7 @@ LazyWatcherClass.getPrintStringOfOneInvolvedFile = (fileEventRecord, shouldOmitS
 		loggingKeyColor,
 		loggingKeyBgColor,
 		termOfEventType,
-		termOfEventTypePadding,
+		termOfEventTypeInAlignedWidth,
 	} = LazyWatcherClass.getLoggingTermAndStyleForAnEvent(typeOfChange);
 
 
@@ -622,7 +619,7 @@ LazyWatcherClass.getPrintStringOfOneInvolvedFile = (fileEventRecord, shouldOmitS
 	}${
 		chalk[loggingKeyBgColor].black(` ${termOfEventType} `)
 	}${
-		termOfEventTypePadding
+		termOfEventTypeInAlignedWidth
 	} ${
 		chalk[loggingKeyColor](file)
 	}`;
