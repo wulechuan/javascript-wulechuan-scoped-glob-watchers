@@ -1,4 +1,3 @@
-const moment = require('moment');
 const chalk = require('chalk');
 const consoleDoesSupportColors = chalk.supportsColor;
 
@@ -24,8 +23,18 @@ function createPsuedoMethodForRemovingEventListenersFromAnEngine(engineId) {
 	};
 }
 
-function formatTimestamp(timestamp, format = defaultConfiguration.loggingTimestampFormat) {
-	return moment(timestamp).format(format);
+function formatTimestamp(timestamp) {
+	const dateObjectOfTheTime = new Date(timestamp);
+
+	const hours   = dateObjectOfTheTime.getHours();
+	const minutes = dateObjectOfTheTime.getMinutes();
+	const seconds = dateObjectOfTheTime.getSeconds();
+
+	return [
+		hours   < 10 ? `0${hours}`   : `${hours}`,
+		minutes < 10 ? `0${minutes}` : `${minutes}`,
+		seconds < 10 ? `0${seconds}` : `${seconds}`,
+	].join(':');
 }
 
 

@@ -40,6 +40,7 @@ const sourceGlobsOfStylusToWatch = [
 
 const sourceGlobsOfJavascriptToWatch = [
 	joinPath(dummySourceCodeRootFolder, 'javascript', '**/*.js'),
+	`!${joinPath(dummySourceCodeRootFolder, 'something-does-not-exist-at-all', '**/*.js')}`,
 ];
 
 /*

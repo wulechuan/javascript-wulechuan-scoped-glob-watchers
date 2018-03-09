@@ -15,11 +15,7 @@
   "directories": {
     "tryoutDummyProject": "try-it-out/a-dummy-project"
   },
-  "scripts": {
-    "gulp": " gulp --gulpfile ./gulpfile.js --silent --",
-    "gulpRaw": "gulp --gulpfile ./gulpfile.js --",
-    "start": "npm run gulp"
-  },
+  "homepage": "https://github.com/wulechuan/javascript-wulechuan-scoped-glob-watchers#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wulechuan/javascript-wulechuan-scoped-glob-watchers.git"
@@ -27,11 +23,14 @@
   "bugs": {
     "url": "https://github.com/wulechuan/javascript-wulechuan-scoped-glob-watchers/issues"
   },
-  "homepage": "https://github.com/wulechuan/javascript-wulechuan-scoped-glob-watchers#readme",
+  "scripts": {
+    "gulp": " gulp --gulpfile ./gulpfile.js --silent --",
+    "gulpRaw": "gulp --gulpfile ./gulpfile.js --",
+    "start": "npm run gulp"
+  },
   "dependencies": {
     "chalk": "^2.3.1",
     "gaze": "^1.1.2",
-    "moment": "^2.20.1",
     "path": "^0.12.7"
   },
   "devDependencies": {
