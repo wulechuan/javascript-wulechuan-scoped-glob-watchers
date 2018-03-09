@@ -1,18 +1,15 @@
 {
   "name": "@wulechuan/scoped-glob-watchers",
-  "version": "0.0.11",
+  "version": "0.1.0",
   "description": "A file/glob lazy watchers controller, with scopes defined, each said scope a watcher.",
   "author": "wulechuan <wulechuan@live.com>",
   "license": "WTFPL",
   "keywords": [
-    "File",
-    "system",
+    "filesystem",
     "watcher",
-    "glob",
-    "watcher",
-    "watcher",
-    "file",
-    "watcher"
+    "filewatcher",
+    "globwatcher",
+    "lazywatcher"
   ],
   "main": "source/index.js",
   "directories": {

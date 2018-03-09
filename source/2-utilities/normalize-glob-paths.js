@@ -11,7 +11,8 @@ module.exports = function toNormalizeOneGlobPathIntoRelativePath(basePath, rawGl
 		normalizedGlob = normalizedGlob.slice(1);
 	}
 
-	normalizedGlob = pathTool.relative(basePath, normalizedGlob).replace(/\\/g, '/');
+	normalizedGlob = pathTool.relative(basePath, normalizedGlob)
+		.replace(/\\/g, '/'); // gaze似乎不支持Windows路径
 
 	if (hasNegativeSign) {
 		normalizedGlob = `!${normalizedGlob}`;

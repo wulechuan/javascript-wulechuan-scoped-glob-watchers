@@ -14,80 +14,94 @@ const alignedEventTypeOfEventRawType = {
 
 module.exports = function toCreateOneConnectorForTheGazeEngine(options = {}) {
 	const {
-		basePath = '',
+		watchingBasePath = process.cwd(),
+		basePathForShorteningPathsInLog = watchingBasePath,
 	} = options;
 
 	return {
 		listenToEvents,
 		removeAllListeners,
 		toNormalizeOneGlob,
+		toGetPrintVersionOfOneGlob,
 		alignedEventTypeOfEventRawType,
 	};
 
 
 
 	function toNormalizeOneGlob(rawGlob) {
-		return toNormalizeOneGlobPathIntoRelativePath(basePath, rawGlob);
+		return toNormalizeOneGlobPathIntoRelativePath(watchingBasePath, rawGlob);
+	}
+
+	function toGetPrintVersionOfOneGlob(rawGlob) {
+		return toNormalizeOneGlobPathIntoRelativePath(basePathForShorteningPathsInLog, rawGlob);
 	}
 };
 
 
 
 
-function listenToEvents(globsToWatch, events) {
+function listenToEvents(watchingBasePath, globsToWatch, events) {
 	const {
-		rawListenerFor,
-		usedListenerFor,
+		abstractListenerCandidateFor,
+		usedAbstractListenerFor,
 	} = events;
 
-	const defaultSingleFileInvolvedListener = rawListenerFor['the "all" event'];
+	const defaultSingleFileInvolvedListener = abstractListenerCandidateFor['the "all" event'];
 
-	if (! usedListenerFor['gaze:all']) {
-		usedListenerFor['gaze:all'] = defaultSingleFileInvolvedListener;
+	if (! usedAbstractListenerFor['gaze:all']) {
+		usedAbstractListenerFor['gaze:all'] = defaultSingleFileInvolvedListener;
 	}
 
-	// if (!usedListenerFor['gaze:added']) {
-	// 	usedListenerFor['gaze:added'] = (involvedFileAbsolutePath) => {
+	// if (!usedAbstractListenerFor['gaze:added']) {
+	// 	usedAbstractListenerFor['gaze:added'] = (involvedFileAbsolutePath) => {
 	// 		defaultSingleFileInvolvedListener('added', involvedFileAbsolutePath);
 	// 	};
 	// }
 
-	// if (!usedListenerFor['gaze:renamed']) {
-	// 	usedListenerFor['gaze:renamed'] = (involvedFileAbsolutePath) => {
+	// if (!usedAbstractListenerFor['gaze:renamed']) {
+	// 	usedAbstractListenerFor['gaze:renamed'] = (involvedFileAbsolutePath) => {
 	// 		defaultSingleFileInvolvedListener('renamed', involvedFileAbsolutePath);
 	// 	};
 	// }
 
-	// if (!usedListenerFor['gaze:changed']) {
-	// 	usedListenerFor['gaze:changed'] = (involvedFileAbsolutePath) => {
+	// if (!usedAbstractListenerFor['gaze:changed']) {
+	// 	usedAbstractListenerFor['gaze:changed'] = (involvedFileAbsolutePath) => {
 	// 		defaultSingleFileInvolvedListener('changed', involvedFileAbsolutePath);
 	// 	};
 	// }
 
-	// if (!usedListenerFor['gaze:deleted']) {
-	// 	usedListenerFor['gaze:deleted'] = (involvedFileAbsolutePath) => {
+	// if (!usedAbstractListenerFor['gaze:deleted']) {
+	// 	usedAbstractListenerFor['gaze:deleted'] = (involvedFileAbsolutePath) => {
 	// 		defaultSingleFileInvolvedListener('deleted', involvedFileAbsolutePath);
 	// 	};
 	// }
 
-	gaze(globsToWatch, (error, thisGazer) => {
-		events.emitterOf['gaze'] = thisGazer; // eslint-disable-line dot-notation
+	gaze(
+		globsToWatch,
 
-		thisGazer.on('all', usedListenerFor['gaze:all']);
+		{
+			cwd: watchingBasePath,
+		},
 
-		// 不论是直接侦听 all 事件，还是分别侦听以下四种事件，都无法避免将 rename 误判为两个不同事件。
-		// 多数情况下是误判为文件先被 deleted 再被 renamed ；偶尔会出现先 deleted 后 added 。
-		// 因此，干脆仍然采用侦听 all 事件。
-		// thisGazer.on('added', usedListenerFor['gaze:added']);
-		// thisGazer.on('renamed', usedListenerFor['gaze:renamed']);
-		// thisGazer.on('changed', usedListenerFor['gaze:changed']);
-		// thisGazer.on('deleted', usedListenerFor['gaze:deleted']);
-	});
+		(error, thisGazer) => {
+			events.emitterOf['gaze'] = thisGazer; // eslint-disable-line dot-notation
+
+			thisGazer.on('all', usedAbstractListenerFor['gaze:all']);
+
+			// 不论是直接侦听 all 事件，还是分别侦听以下四种事件，都无法避免将 rename 误判为两个不同事件。
+			// 多数情况下是误判为文件先被 deleted 再被 renamed ；偶尔会出现先 deleted 后 added 。
+			// 因此，干脆仍然采用侦听 all 事件。
+			// thisGazer.on('added', usedAbstractListenerFor['gaze:added']);
+			// thisGazer.on('renamed', usedAbstractListenerFor['gaze:renamed']);
+			// thisGazer.on('changed', usedAbstractListenerFor['gaze:changed']);
+			// thisGazer.on('deleted', usedAbstractListenerFor['gaze:deleted']);
+		}
+	);
 }
 
 function removeAllListeners(events) {
 	const gazer = events.emitterOf['gaze']; // eslint-disable-line dot-notation
-	const eventListeners = events.usedListenerFor;
+	const eventListeners = events.usedAbstractListenerFor;
 	gazer.removeListener('all', eventListeners['gaze:all']);
 	// gazer.removeListener('added', eventListeners['gaze:added']);
 	// gazer.removeListener('renamed', eventListeners['gaze:renamed']);

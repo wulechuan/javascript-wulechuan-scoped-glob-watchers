@@ -76,11 +76,12 @@ function LazyWatcherClass(scopeId, constructionOptions) {
 	const scopeIdPrintingString = LazyWatcherClass.getPrettyPrintingStringOfScopeId(scopeId);
 
 	const {
-		basePath = process.cwd(),
+		watchingBasePath = process.cwd(),
+		basePathForShorteningPathsInLog = watchingBasePath,
 		delayTimeForTakingAction = defaultConfiguration.delayTimeInMilliSecondsForGatheringEvents,
-		shouldNotConnectToAnyUnderlyingEngineOnConstruction = false,
 		shouldTakeActionOnWatcherCreation = false,
 		underlyingWatchEngineIdToUse = '',
+		shouldNotConnectToAnyUnderlyingEngineOnConstruction = false,
 		shouldLogVerbosely = false,
 	} = constructionOptions;
 
@@ -105,20 +106,22 @@ function LazyWatcherClass(scopeId, constructionOptions) {
 	let currentUnderlyingWatchEngineId = '';
 	let currentUnderlyingWatchEngineConnector = null;
 	let normalizedGlobs = [];
+	let printingVersionOfGlobs = [];
 
 
 	const cachedConnectorsToUsedUnderlyingEngines = {};
 	const events = {
-		rawListenerFor: {
+		abstractListenerCandidateFor: {
 			'the "all" event': rememberAnEvent,
 		},
-		usedListenerFor: {},
+		usedAbstractListenerFor: {},
 		emitterOf: {},
 	};
 
 
 	thisWatcher.scopeId = scopeId;
-	thisWatcher.basePath = basePath;
+	thisWatcher.watchingBasePath = watchingBasePath;
+	thisWatcher.basePathForShorteningPathsInLog = basePathForShorteningPathsInLog;
 	thisWatcher.rawGlobsToWatch = globsToWatch;
 
 	thisWatcher.connectToUnderlyingWatchEngine = connectToUnderlyingWatchEngine.bind(thisWatcher);
@@ -189,6 +192,10 @@ function LazyWatcherClass(scopeId, constructionOptions) {
 		return rawGlobs.map(toNormalizeOneGlob);
 	}
 
+	function toGetPrintVersionOfGlobs(rawGlobs, toGetPrintVersionOfGlobs) {
+		return rawGlobs.map(toGetPrintVersionOfGlobs);
+	}
+
 	function getConnectorViaEngineId(desiredEngineId, options) {
 		if (cachedConnectorsToUsedUnderlyingEngines[desiredEngineId]) {
 			return cachedConnectorsToUsedUnderlyingEngines[desiredEngineId];
@@ -233,9 +240,15 @@ function LazyWatcherClass(scopeId, constructionOptions) {
 			currentUnderlyingWatchEngineConnector.toNormalizeOneGlob
 		);
 
+		printingVersionOfGlobs = toGetPrintVersionOfGlobs(
+			globsToWatch,
+			currentUnderlyingWatchEngineConnector.toGetPrintVersionOfOneGlob
+		);
+
 		// If nothing was thrown, then we are safe now.
 		currentUnderlyingWatchEngineId = desiredEngineId;
 		currentUnderlyingWatchEngineConnector.listenToEvents(
+			watchingBasePath,
 			normalizedGlobs,
 			events
 		);
@@ -252,7 +265,7 @@ function LazyWatcherClass(scopeId, constructionOptions) {
 			scopeIdPrintingString
 		} ${chalk.gray('~')}\nWatching glob(s):`);
 
-		LazyWatcherClass.logGlobsAsAList(normalizedGlobs);
+		LazyWatcherClass.logGlobsAsAList(printingVersionOfGlobs);
 
 		console.log('\n');
 
@@ -492,7 +505,7 @@ LazyWatcherClass.logGlobsAsAList = (globs, indentation = 4) => {
 	const globsListString = globs.reduce((accumString, glob) => {
 		const hasNegativeSign = glob.slice(0, 1) === '!';
 		const globString = hasNegativeSign ?
-			`${' '.repeat(indentation - 1)}${chalk.red(glob)}` :
+			`${' '.repeat(indentation - 2)}${chalk.red('!')} ${chalk.red(glob.slice(1))}` :
 			`${' '.repeat(indentation)}${chalk.green(glob)}`;
 		return `${accumString}${globString}\n`;
 	}, '');
@@ -681,10 +694,16 @@ LazyWatcherClass.validateAConnectorDefinition = (connectorToCheck, engineId) => 
 		validConnector.toNormalizeOneGlob = connectorToCheck.toNormalizeOneGlob;
 	}
 
+	validConnector.toGetPrintVersionOfOneGlob = validConnector.toNormalizeOneGlob;
+
+	if (typeof connectorToCheck.toGetPrintVersionOfOneGlob === 'function') {
+		validConnector.toGetPrintVersionOfOneGlob = connectorToCheck.toGetPrintVersionOfOneGlob;
+	}
+
 	return validConnector;
 };
 
-LazyWatcherClass.registerConnectorForOneUnderlyingWatchEngine = (engineId, toCreateConnectorDefinition) => {
+LazyWatcherClass.registerConnectorForOneUnderlyingWatchEngine = (engineId, toCreateOneConnector) => {
 	engineId = getValidStringFrom(engineId);
 	if (!engineId) {
 		throw new TypeError(chalk.bgRed.black(' Invalid engine id provided. MUST be a non empty string. '));
@@ -692,18 +711,22 @@ LazyWatcherClass.registerConnectorForOneUnderlyingWatchEngine = (engineId, toCre
 
 	let decidedConnectorFactory;
 
-	if (typeof toCreateConnectorDefinition === 'function') {
+	if (typeof toCreateOneConnector === 'function') {
 		decidedConnectorFactory = (options) => {
-			const createdConnector = toCreateConnectorDefinition(options);
+			const createdConnector = toCreateOneConnector(options);
+
+			// The statement below might throw to guard arguments.
 			const validConnector = LazyWatcherClass.validateAConnectorDefinition(createdConnector, engineId);
+
+			// If nothing was thrown, then we are safe now.
 			return validConnector;
 		};
 	} else {
 		// Otherwise it is expected to be a valid definition object literal.
-		const connectorDefinition = toCreateConnectorDefinition;
+		const theDirectlyProvidedConnector = toCreateOneConnector;
 
 		// The statement below might throw to guard arguments.
-		const validConnector = LazyWatcherClass.validateAConnectorDefinition(connectorDefinition, engineId);
+		const validConnector = LazyWatcherClass.validateAConnectorDefinition(theDirectlyProvidedConnector, engineId);
 
 		// If nothing was thrown, then we are safe now.
 		decidedConnectorFactory = () => {

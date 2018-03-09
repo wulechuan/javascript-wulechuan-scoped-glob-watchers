@@ -2,19 +2,21 @@ const LazyWatcherClass = require('./the-watcher-class');
 
 module.exports = function createWatchersAccordingTo(scopedWatchingSettings, sharedOptions = {
 	// underlyingWatchEngineIdToUse,
-	// engineId,           // also allowed to set in each scoped settings
-	// basePath,           // also allowed to set in each scoped settings
-	// shouldLogVerbosely, // also allowed to set in each scoped settings
+	// watchingBasePath,                 // also allowed to set in each scoped settings
+	// basePathForShorteningPathsInLog,  // also allowed to set in each scoped settings
+	// shouldLogVerbosely,               // also allowed to set in each scoped settings
 }) {
-	const decidedShareOptions = Object.assign(
-		{
-			underlyingWatchEngineIdToUse: LazyWatcherClass.defaultConfiguration.underlyingWatchEngineId,
-			basePath:                     process.cwd(),
-			shouldLogVerbosely:           false,
-		},
+	const defaultSharingOptions = {
+		underlyingWatchEngineIdToUse:    LazyWatcherClass.defaultConfiguration.underlyingWatchEngineId,
+		watchingBasePath:                process.cwd(),
+		basePathForShorteningPathsInLog: process.cwd(),
+		shouldLogVerbosely:              false,
+	};
 
-		sharedOptions
-	);
+	const decidedSharingOptions = {
+		...defaultSharingOptions,
+		...sharedOptions,
+	};
 
 	const knownScopeIds = Object.keys(scopedWatchingSettings);
 
@@ -23,13 +25,12 @@ module.exports = function createWatchersAccordingTo(scopedWatchingSettings, shar
 			throw Error(`Duplicated scope id "${scopeId}".`);
 		}
 
-		const lazyWatcherConstructionOptions = Object.assign(
-			{},
-			decidedShareOptions,
-			scopedWatchingSettings[scopeId]
-		);
+		const scopeSpecificOptions = scopedWatchingSettings[scopeId];
 
-		// console.log(lazyWatcherConstructionOptions);
+		const lazyWatcherConstructionOptions = {
+			...decidedSharingOptions,
+			...scopeSpecificOptions,
+		};
 
 		watcherInstances[scopeId] = new LazyWatcherClass(scopeId, lazyWatcherConstructionOptions);
 

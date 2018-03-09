@@ -124,7 +124,8 @@ gulp.task('build and then watch: everything', (thisTaskIsDone) => {
 	scopedGlobsLazilyWatchingMechanism.createWatchersAccordingTo(
 		scopedWatchingSettings,
 		{
-			basePath: npmProjectRootPath,
+			watchingBasePath: npmProjectRootPath,
+			basePathForShorteningPathsInLog: joinPath(npmProjectRootPath, 'try-it-out/a-dummy-project'),
 			// shouldLogVerbosely: false,
 		}
 	);
