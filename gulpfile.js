@@ -124,9 +124,22 @@ const scopedWatchingSettings = {
 gulp.task('build and then watch: everything', (thisTaskIsDone) => {
 	scopedGlobsLazilyWatchingMechanism.createWatchersAccordingTo(
 		scopedWatchingSettings,
+
+
+		// An object containing some shared options across all scopes,
+		// But all properties of this object can be optionally set
+		// separately for each and every scope,
+		// overriding values defined here.
 		{
-			watchingBasePath: npmProjectRootPath,
-			basePathForShorteningPathsInLog: joinPath(npmProjectRootPath, 'try-it-out/a-dummy-project'),
+			// Optional but important. Default to process.cwd()
+			watchingBasePath:                npmProjectRootPath,
+
+			// Optional. Just for better logging.
+			basePathForShorteningPathsInLog: joinPath(
+				npmProjectRootPath,
+				'try-it-out/a-dummy-project'
+			),
+
 			// shouldLogVerbosely: false,
 		}
 	);

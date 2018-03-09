@@ -11,31 +11,12 @@ const getValidStringFrom = require('../2-utilities/get-so-called-valid-string');
 const defaultConfiguration = require('../default-configuration');
 const registeredFactoriesForConnectorsOfUnderlyingEngines = {};
 
+const TERM_FOR_FILE_ENTERED_SCOPE  = 'Added';
+const TERM_FOR_FILE_DISAPPEARED    = 'Disappeared';
+const TERM_FOR_FILE_RENAMED        = 'Renamed';
+const TERM_FOR_FILE_MODIFIED       = 'Modified';
+const TERM_FOR_UNKNOWN_FILE_CHANGE = 'Change of unknown type';
 
-
-
-
-
-function createPsuedoMethodForRemovingEventListenersFromAnEngine(engineId) {
-	return () => {
-		console.log(`${chalk.bgYellow.black(' WARNING ')}: ${
-			chalk.yellow(`For engine "${chalk.red(engineId)}", the method for removing event handlers for not implemented yet!`)}`);
-	};
-}
-
-function formatTimestamp(timestamp) {
-	const dateObjectOfTheTime = new Date(timestamp);
-
-	const hours   = dateObjectOfTheTime.getHours();
-	const minutes = dateObjectOfTheTime.getMinutes();
-	const seconds = dateObjectOfTheTime.getSeconds();
-
-	return [
-		hours   < 10 ? `0${hours}`   : `${hours}`,
-		minutes < 10 ? `0${minutes}` : `${minutes}`,
-		seconds < 10 ? `0${seconds}` : `${seconds}`,
-	].join(':');
-}
 
 
 
@@ -61,7 +42,10 @@ function LazyWatcherClass(scopeId, constructionOptions) {
 
 	if (! globsToWatch) {
 		throw new TypeError(chalk.bgRed.black(` Arguments[${chalk.white(1)}] ("${
-			chalk.white('globsToWatch')}"): Must be either a non empty string or an array of non empty strings. `));
+			chalk.white('options')
+		}"): Must contain a property named "${
+			chalk.white('globsToWatch')
+		}, and the value must be either a non-empty string or an array of that kind of strings.". `));
 	}
 
 	if (! Array.isArray(globsToWatch)) {
@@ -69,11 +53,16 @@ function LazyWatcherClass(scopeId, constructionOptions) {
 	}
 
 	if (typeof actionToTake !== 'function') {
-		throw new TypeError(chalk.bgRed.black(` Arguments[${chalk.white(2)}] ("${
-			chalk.white('actionToTake')}"): Must be a function. `));
+		throw new TypeError(chalk.bgRed.black(` Arguments[${chalk.white(1)}] ("${
+			chalk.white('options')
+		}"): Must contain a ${
+			chalk.white('function')
+		} property named "${chalk.white('actionToTake')}". `));
 	}
 
-
+	const rawGlobsToWatch = [
+		...globsToWatch,
+	];
 
 
 
@@ -131,7 +120,7 @@ function LazyWatcherClass(scopeId, constructionOptions) {
 	thisWatcher.scopeId = scopeId;
 	thisWatcher.watchingBasePath = watchingBasePath;
 	thisWatcher.basePathForShorteningPathsInLog = basePathForShorteningPathsInLog;
-	thisWatcher.rawGlobsToWatch = globsToWatch;
+	thisWatcher.rawGlobsToWatch = globsToWatch; // Protect the copied "rawGlobsToWatch"
 
 	thisWatcher.connectToUnderlyingWatchEngine = connectToUnderlyingWatchEngine.bind(thisWatcher);
 	thisWatcher.disconnectCurrentUnderlyingWatchEngine = disconnectCurrentUnderlyingWatchEngine.bind(thisWatcher);
@@ -245,12 +234,12 @@ function LazyWatcherClass(scopeId, constructionOptions) {
 		);
 
 		normalizedGlobs = toNormalizeGlobs(
-			globsToWatch,
+			rawGlobsToWatch,
 			currentUnderlyingWatchEngineConnector.toNormalizeOneGlob
 		);
 
 		printingVersionOfGlobs = toGetPrintVersionOfGlobs(
-			globsToWatch,
+			rawGlobsToWatch,
 			currentUnderlyingWatchEngineConnector.toGetPrintVersionOfOneGlob
 		);
 
@@ -384,7 +373,7 @@ function LazyWatcherClass(scopeId, constructionOptions) {
 
 		const fileRecord = {
 			timestamp,
-			typeOfChange: currentUnderlyingWatchEngineConnector.alignedEventTypeOfEventRawType[typeOfTheChange],
+			typeOfChange: currentUnderlyingWatchEngineConnector.abstractChangeTypeOfRawEventType[typeOfTheChange],
 			rawTypeOfChange: typeOfTheChange,
 			file: involvedFileNormalizedPath,
 			scopeId,
@@ -503,6 +492,14 @@ function LazyWatcherClass(scopeId, constructionOptions) {
 
 LazyWatcherClass.defaultConfiguration = defaultConfiguration;
 
+LazyWatcherClass.terms = {
+	FILE_ENTERING_SCOPE: TERM_FOR_FILE_ENTERED_SCOPE,
+	FILE_DISAPPEARANCE:  TERM_FOR_FILE_DISAPPEARED,
+	FILE_RENAMED:        TERM_FOR_FILE_RENAMED,
+	FILE_MODIFIED:       TERM_FOR_FILE_MODIFIED,
+	UNKNOWN_FILE_CHANGE: TERM_FOR_UNKNOWN_FILE_CHANGE,
+};
+
 LazyWatcherClass.defaultMethodToNormalizeOneGlob = rawGlob => rawGlob;
 
 LazyWatcherClass.getPrettyPrintingStringOfScopeId = (scopeId) => {
@@ -563,44 +560,38 @@ LazyWatcherClass.getLoggingTermAndStyleForAnEvent = (typeOfTheChange) => {
 	let termOfEventType = typeOfTheChange;
 	let termOfEventTypeButInAlignedWidth = '';
 
-	const termForAddition      = 'Added';
-	const termForDisappearance = 'Disappeared';
-	const termForRenaming      = 'Renamed';
-	const termForModification  = 'Modified';
-	const termForUnknownType   = 'Change of unknown type';
-
 	const termsAlignedWidth = Math.max(
 		// termUnknownType.length,
-		termForAddition.length,
-		termForDisappearance.length,
-		termForRenaming.length,
-		termForModification.length
+		TERM_FOR_FILE_ENTERED_SCOPE.length,
+		TERM_FOR_FILE_DISAPPEARED.length,
+		TERM_FOR_FILE_RENAMED.length,
+		TERM_FOR_FILE_MODIFIED.length
 	);
 
 	/* eslint-disable indent */
 	switch (typeOfTheChange) {
-		case termForModification:
+		case TERM_FOR_FILE_MODIFIED:
 			loggingKeyColor   = 'blue';
 			loggingKeyBgColor = 'bgBlue';
 			break;
 
-		case termForAddition:
+		case TERM_FOR_FILE_ENTERED_SCOPE:
 			loggingKeyColor   = 'green';
 			loggingKeyBgColor = 'bgGreen';
 			break;
 
-		case termForDisappearance:
+		case TERM_FOR_FILE_DISAPPEARED:
 			loggingKeyColor   = 'red';
 			loggingKeyBgColor = 'bgRed';
 			break;
 
-		case termForRenaming:
+		case TERM_FOR_FILE_RENAMED:
 			loggingKeyColor   = 'cyan';
 			loggingKeyBgColor = 'bgCyan';
 			break;
 
 		default:
-			termOfEventType   = termForUnknownType;
+			termOfEventType   = TERM_FOR_UNKNOWN_FILE_CHANGE;
 			loggingKeyColor   = 'black';
 			loggingKeyBgColor = 'bgWhite';
 			break;
@@ -655,7 +646,7 @@ LazyWatcherClass.getAllFactoriesForConnectorsOfAllRegisteredUnderLyingWatchEngin
 	return Object.assign({}, registeredFactoriesForConnectorsOfUnderlyingEngines);
 };
 
-LazyWatcherClass.validateAConnectorDefinition = (connectorToCheck, engineId) => {
+LazyWatcherClass.validateAConnectorDefinition = (connectorToCheck, engineId) => { // eslint-disable-line max-statements
 	if (!engineId) {
 		engineId = '<Unspecified engine>';
 	}
@@ -668,12 +659,102 @@ LazyWatcherClass.validateAConnectorDefinition = (connectorToCheck, engineId) => 
 
 	const logString1 = `The created connector for engine "${chalk.white(engineId)}"`;
 
-	if (!connectorToCheck) {
+
+
+
+
+	if (! connectorToCheck || typeof connectorToCheck !== 'object') {
 		console.log(logStringForError);
 		throw new TypeError();
 	}
 
-	if (typeof connectorToCheck.listenToEvents !== 'function') {
+
+	const {
+		abstractChangeTypeOfRawEventType,
+		listenToEvents: toListenToEvents,
+	} = connectorToCheck;
+
+	let {
+		toNormalizeOneGlob,
+		toGetPrintVersionOfOneGlob,
+		removeAllListeners: toRemoveAllListeners,
+	} = connectorToCheck;
+
+
+
+
+	if (! abstractChangeTypeOfRawEventType || typeof abstractChangeTypeOfRawEventType !== 'object') {
+		console.log(`${logStringForError}\n  ${
+			chalk.red(` It MUST contain an object property named "${
+				chalk.white('abstractChangeTypeOfRawEventType')
+			}". `)
+		}\n`);
+
+		throw new TypeError();
+	} else {
+		let termEnteredScopeMappedCount = 0;
+		let termDisappearedMappedCount = 0;
+		let termRenamedMappedCount = 0;
+		let termModifiedMappedCount = 0;
+
+		const rawEventTypes = Object.keys(abstractChangeTypeOfRawEventType);
+		rawEventTypes.forEach(rawType => {
+			const mappedType = abstractChangeTypeOfRawEventType[rawType];
+
+			if (mappedType === TERM_FOR_FILE_ENTERED_SCOPE) {
+				termEnteredScopeMappedCount++;
+			}
+
+			if (mappedType === TERM_FOR_FILE_DISAPPEARED) {
+				termDisappearedMappedCount++;
+			}
+
+			if (mappedType === TERM_FOR_FILE_RENAMED) {
+				termRenamedMappedCount++;
+			}
+
+			if (mappedType === TERM_FOR_FILE_MODIFIED) {
+				termModifiedMappedCount++;
+			}
+		});
+
+		if (termEnteredScopeMappedCount < 1) {
+			logOneUnmappedEventType(TERM_FOR_FILE_ENTERED_SCOPE, engineId);
+		}
+
+		if (termDisappearedMappedCount < 1) {
+			logOneUnmappedEventType(TERM_FOR_FILE_DISAPPEARED, engineId);
+		}
+
+		if (termRenamedMappedCount < 1) {
+			logOneUnmappedEventType(TERM_FOR_FILE_RENAMED, engineId);
+		}
+
+		if (termModifiedMappedCount < 1) {
+			logOneUnmappedEventType(TERM_FOR_FILE_MODIFIED, engineId);
+		}
+
+		if (
+			termEnteredScopeMappedCount < 1 ||
+			termDisappearedMappedCount  < 1 ||
+			termRenamedMappedCount      < 1 ||
+			termModifiedMappedCount     < 1
+		) {
+			console.log('');
+		}
+	}
+
+	function logOneUnmappedEventType(term, engineId) {
+		console.log(chalk.bgYellow.black(
+			`Event ${
+				chalk.bgMagenta.black(` ${term} `)
+			} is not mapped by connector of ${
+				chalk.bgGreen.black(` ${engineId} `)
+			}`
+		));
+	}
+
+	if (typeof toListenToEvents !== 'function') {
 		console.log(`${logStringForError}\n  ${
 			chalk.red(` It MUST contain a method named "${chalk.white('listenToEvents')}". `)
 		}\n`);
@@ -681,7 +762,7 @@ LazyWatcherClass.validateAConnectorDefinition = (connectorToCheck, engineId) => 
 		throw new TypeError();
 	}
 
-	if (typeof connectorToCheck.removeAllListeners !== 'function') {
+	if (typeof toRemoveAllListeners !== 'function') {
 		console.log(`\n${chalk.bgYellow.black(' WARNING ')}:\n    ${
 			chalk.yellow(`${
 				logString1
@@ -691,23 +772,28 @@ LazyWatcherClass.validateAConnectorDefinition = (connectorToCheck, engineId) => 
 				chalk.green('removeAllListeners')
 			}".`)
 		}\n`);
+
+		toRemoveAllListeners = createPsuedoMethodForRemovingEventListenersFromAnEngine(engineId);
 	}
+
+	if (typeof toNormalizeOneGlob !== 'function') {
+		toNormalizeOneGlob = LazyWatcherClass.defaultMethodToNormalizeOneGlob;
+	}
+
+	if (typeof toGetPrintVersionOfOneGlob !== 'function') {
+		toGetPrintVersionOfOneGlob = toNormalizeOneGlob;
+	}
+
+
 
 	const validConnector = {
-		toNormalizeOneGlob: LazyWatcherClass.defaultMethodToNormalizeOneGlob,
-		listenToEvents: connectorToCheck.listenToEvents,
-		removeAllListeners: connectorToCheck.removeAllListeners || createPsuedoMethodForRemovingEventListenersFromAnEngine(engineId),
+		toNormalizeOneGlob,
+		abstractChangeTypeOfRawEventType,
+		listenToEvents: toListenToEvents,
+		toRemoveAllListeners,
+		toGetPrintVersionOfOneGlob,
 	};
 
-	if (typeof connectorToCheck.toNormalizeOneGlob === 'function') {
-		validConnector.toNormalizeOneGlob = connectorToCheck.toNormalizeOneGlob;
-	}
-
-	validConnector.toGetPrintVersionOfOneGlob = validConnector.toNormalizeOneGlob;
-
-	if (typeof connectorToCheck.toGetPrintVersionOfOneGlob === 'function') {
-		validConnector.toGetPrintVersionOfOneGlob = connectorToCheck.toGetPrintVersionOfOneGlob;
-	}
 
 	return validConnector;
 };
@@ -750,6 +836,34 @@ LazyWatcherClass.registerConnectorForOneUnderlyingWatchEngine = (engineId, toCre
 
 
 
+
+
+
+
+function createPsuedoMethodForRemovingEventListenersFromAnEngine(engineId) {
+	return () => {
+		console.log(`${chalk.bgYellow.black(' WARNING ')
+		}: ${
+			chalk.yellow(`For engine "${
+				chalk.red(engineId)
+			}", the method for removing event handlers for not implemented yet!`)
+		}`);
+	};
+}
+
+function formatTimestamp(timestamp) {
+	const dateObjectOfTheTime = new Date(timestamp);
+
+	const hours   = dateObjectOfTheTime.getHours();
+	const minutes = dateObjectOfTheTime.getMinutes();
+	const seconds = dateObjectOfTheTime.getSeconds();
+
+	return [
+		hours   < 10 ? `0${hours}`   : `${hours}`,
+		minutes < 10 ? `0${minutes}` : `${minutes}`,
+		seconds < 10 ? `0${seconds}` : `${seconds}`,
+	].join(':');
+}
 
 
 module.exports = LazyWatcherClass;

@@ -2,7 +2,7 @@ const gaze = require('gaze');
 
 const toNormalizeOneGlobPathIntoRelativePath = require('../2-utilities/normalize-glob-paths');
 
-const alignedEventTypeOfEventRawType = {
+const abstractChangeTypeOfRawEventType = {
 	'added':   'Added',
 	'deleted': 'Disappeared',
 	'renamed': 'Renamed',
@@ -23,7 +23,7 @@ module.exports = function toCreateOneConnectorForTheGazeEngine(options = {}) {
 		removeAllListeners,
 		toNormalizeOneGlob,
 		toGetPrintVersionOfOneGlob,
-		alignedEventTypeOfEventRawType,
+		abstractChangeTypeOfRawEventType,
 	};
 
 

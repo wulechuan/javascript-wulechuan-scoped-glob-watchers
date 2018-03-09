@@ -133,8 +133,22 @@ const scopedWatchingSettings = {
 gulp.task('build and then watch: everything', (thisTaskIsDone) => {
 	scopedGlobsLazilyWatchingMechanism.createWatchersAccordingTo(
 		scopedWatchingSettings,
+
+
+		// An object containing some shared options across all scopes,
+		// But all properties of this object can be optionally set
+		// separately for each and every scope,
+		// overriding values defined here.
 		{
-			basePath: npmProjectRootPath,
+			// Optional but important. Default to process.cwd()
+			watchingBasePath:                npmProjectRootPath,
+
+			// Optional. Just for better logging.
+			basePathForShorteningPathsInLog: joinPath(
+				npmProjectRootPath,
+				'try-it-out/a-dummy-project'
+			),
+
 			// shouldLogVerbosely: false,
 		}
 	);
@@ -231,3 +245,26 @@ Sorry. I don't have too much spare time at present.
 I have my boy to take care of.
 
 Consult my *ugly* source codes if you'd like to. :p
+
+
+<br/>
+<br/>
+<br/>
+<br/>
+
+# Changes from Version to Version
+
+## Changes in v0.1.0
+
+1.  For the construction options of watchers,
+	the property`basePath` has been renamed into `watchingBasePath`
+
+<br/>
+
+1.  For the construction options of watchers,
+	a new property `basePathForShorteningPathsInLog` is added.
+
+<br/>
+<br/>
+<br/>
+<br/>
