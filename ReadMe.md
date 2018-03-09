@@ -256,12 +256,12 @@ Consult my *ugly* source codes if you'd like to. :p
 
 ## Changes in v0.1.0
 
-1.  For the construction options of watchers,
-	the property`basePath` has been renamed into `watchingBasePath`
+1.  For the **construction options** of watchers,
+	the property `basePath` has been renamed into `watchingBasePath`
 
 <br/>
 
-1.  For the construction options of watchers,
+1.  For the **construction options** of watchers,
 	a new property `basePathForShorteningPathsInLog` is added.
 
 <br/>
