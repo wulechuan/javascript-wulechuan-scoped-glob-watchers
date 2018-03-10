@@ -1,6 +1,9 @@
 # NPM Page
 
+Package Name: 
 [@wulechuan/scoped-glob-watchers](https://www.npmjs.com/package/@wulechuan/scoped-glob-watchers)
+
+Author: 南昌吴乐川
 
 <br/>
 <br/>
