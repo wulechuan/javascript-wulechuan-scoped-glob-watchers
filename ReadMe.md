@@ -135,12 +135,12 @@ gulp.task('build and then watch: everything', (thisTaskIsDone) => {
 		scopedWatchingSettings,
 
 
-		// An object containing some shared options across all scopes,
-		// But all properties of this object can be optionally set
-		// separately for each and every scope,
+		// Below is an object containing some shared options across all scopes,
+		// While all properties of this object can be optionally set
+		// individually for each and every scope,
 		// overriding values defined here.
 		{
-			// Optional but important. Default to process.cwd()
+			// Optional but important. Default to `process.cwd()`
 			watchingBasePath:                npmProjectRootPath,
 
 			// Optional. Just for better logging.
@@ -257,7 +257,7 @@ Consult my *ugly* source codes if you'd like to. :p
 ## Changes in v0.1.0
 
 1.  For the **construction options** of watchers,
-	the property `basePath` has been renamed into `watchingBasePath`
+	the property `basePath` has been renamed into `watchingBasePath`.
 
 <br/>
 
