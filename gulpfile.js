@@ -126,9 +126,9 @@ gulp.task('build and then watch: everything', (thisTaskIsDone) => {
 		scopedWatchingSettings,
 
 
-		// An object containing some shared options across all scopes,
-		// But all properties of this object can be optionally set
-		// separately for each and every scope,
+		// Below is an object containing some shared options across all scopes,
+		// While all properties of this object can be optionally set
+		// individually for each and every scope,
 		// overriding values defined here.
 		{
 			// Optional but important. Default to process.cwd()
