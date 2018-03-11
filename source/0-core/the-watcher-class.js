@@ -182,6 +182,7 @@ function LazyWatcherClass(scopeId, constructionOptions) {
 	function init() {
 		printingVersionOfWatchingGlobs = toGetPrintVersionOfGlobs(
 			rawGlobsToWatch,
+			watchingBasePath,
 			basePathForShorteningPathsInLog
 		);
 
@@ -856,16 +857,21 @@ function formatTimestamp(timestamp) {
 }
 
 
-function toGetPrintVersionOfGlobs(rawGlobs, basePath) {
+function toGetPrintVersionOfGlobs(rawGlobs, globBasePath, printingBasePath) {
 	return rawGlobs.map(
-		rawGlob => toGetPrintVersionOfOneGlob(rawGlob, basePath)
+		rawGlob => toGetPrintVersionOfOneGlob(rawGlob, globBasePath, printingBasePath)
 	);
 }
 
-function toGetPrintVersionOfOneGlob(rawGlob, basePath) {
-	if (basePath && typeof basePath !== 'string') {
-		throw TypeError('The basePath must be either a null or a string.');
+function toGetPrintVersionOfOneGlob(rawGlob, globBasePath, printingBasePath) {
+	if (globBasePath && typeof globBasePath !== 'string') {
+		throw TypeError('The globBasePath must be either a null or a string.');
 	}
+
+	if (printingBasePath && typeof printingBasePath !== 'string') {
+		throw TypeError('The printingBasePath must be either a null or a string.');
+	}
+
 	if (typeof rawGlob !== 'string') {
 		throw TypeError('A glob must be a string.');
 	}
@@ -873,15 +879,18 @@ function toGetPrintVersionOfOneGlob(rawGlob, basePath) {
 
 
 
-	if (! basePath) {
-		basePath = '';
+	if (! globBasePath) {
+		globBasePath = '';
 	} else {
-		basePath = basePath.trim();
+		globBasePath = globBasePath.trim();
 	}
 
-	if (! rawGlob && ! basePath) {
-		return '';
+	if (! printingBasePath) {
+		printingBasePath = '';
+	} else {
+		printingBasePath = printingBasePath.trim();
 	}
+
 
 	// 一些文件监测引擎，例如 gaze ，不支持Windows路径。
 	// 而且起码在Windows下不能侦听绝对路径（以“/”开头的路径）的变动。
@@ -893,9 +902,11 @@ function toGetPrintVersionOfOneGlob(rawGlob, basePath) {
 		globToProcess = globToProcess.slice(1);
 	}
 
+	globToProcess = pathTool.join(globBasePath, globToProcess);
+
 	let relativeGlob = globToProcess;
-	if (basePath) {
-		relativeGlob = pathTool.relative(basePath, globToProcess);
+	if (printingBasePath) {
+		relativeGlob = pathTool.relative(printingBasePath, globToProcess);
 	}
 
 	let normalizedGlob = relativeGlob;
