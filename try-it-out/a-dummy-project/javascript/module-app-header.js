@@ -1,1 +1,1 @@
-console.log('App Header loaded');
+console.log('The AppHeader has been loaded.');

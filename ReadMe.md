@@ -257,6 +257,10 @@ Consult my *ugly* source codes if you'd like to. :p
 
 # Changes from Version to Version
 
+## Changes in v0.2.0
+
+Only some internal APIs changed. Bugs Fixed.
+
 ## Changes in v0.1.0
 
 1.  For the **construction options** of watchers,

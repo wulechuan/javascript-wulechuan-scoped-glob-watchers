@@ -1,7 +1,5 @@
 const gaze = require('gaze');
 
-const toNormalizeOneGlobPathIntoRelativePath = require('../2-utilities/normalize-glob-paths');
-
 const abstractChangeTypeOfRawEventType = {
 	'added':   'Added',
 	'deleted': 'Disappeared',
@@ -9,32 +7,12 @@ const abstractChangeTypeOfRawEventType = {
 	'changed': 'Modified',
 };
 
-
-
-
-module.exports = function toCreateOneConnectorForTheGazeEngine(options = {}) {
-	const {
-		watchingBasePath = process.cwd(),
-		basePathForShorteningPathsInLog = watchingBasePath,
-	} = options;
-
+module.exports = function toCreateOneConnectorForTheGazeEngine() {
 	return {
+		abstractChangeTypeOfRawEventType,
 		listenToEvents,
 		removeAllListeners,
-		toNormalizeOneGlob,
-		toGetPrintVersionOfOneGlob,
-		abstractChangeTypeOfRawEventType,
 	};
-
-
-
-	function toNormalizeOneGlob(rawGlob) {
-		return toNormalizeOneGlobPathIntoRelativePath(watchingBasePath, rawGlob);
-	}
-
-	function toGetPrintVersionOfOneGlob(rawGlob) {
-		return toNormalizeOneGlobPathIntoRelativePath(basePathForShorteningPathsInLog, rawGlob);
-	}
 };
 
 
@@ -101,10 +79,10 @@ function listenToEvents(watchingBasePath, globsToWatch, events) {
 
 function removeAllListeners(events) {
 	const gazer = events.emitterOf['gaze']; // eslint-disable-line dot-notation
-	const eventListeners = events.usedAbstractListenerFor;
-	gazer.removeListener('all', eventListeners['gaze:all']);
-	// gazer.removeListener('added', eventListeners['gaze:added']);
-	// gazer.removeListener('renamed', eventListeners['gaze:renamed']);
-	// gazer.removeListener('changed', eventListeners['gaze:changed']);
-	// gazer.removeListener('deleted', eventListeners['gaze:deleted']);
+	const eventListenerFor = events.usedAbstractListenerFor;
+	gazer.removeListener('all', eventListenerFor['gaze:all']);
+	// gazer.removeListener('added', eventListenerFor['gaze:added']);
+	// gazer.removeListener('renamed', eventListenerFor['gaze:renamed']);
+	// gazer.removeListener('changed', eventListenerFor['gaze:changed']);
+	// gazer.removeListener('deleted', eventListenerFor['gaze:deleted']);
 }

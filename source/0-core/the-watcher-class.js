@@ -1,7 +1,8 @@
+const pathTool = require('path');
 const chalk = require('chalk');
 const consoleDoesSupportColors = chalk.supportsColor;
 
-const isAPromiseObject = require('../2-utilities/assert-object-to-be-a-promise');
+const isAPromiseObject   = require('../2-utilities/assert-object-to-be-a-promise');
 const getValidStringFrom = require('../2-utilities/get-so-called-valid-string');
 
 
@@ -74,18 +75,26 @@ function LazyWatcherClass(scopeId, constructionOptions) {
 	const scopeIdPrintingString = LazyWatcherClass.getPrettyPrintingStringOfScopeId(scopeId);
 
 	const {
-		watchingBasePath = process.cwd(),
-		basePathForShorteningPathsInLog = watchingBasePath,
 		delayTimeForTakingAction = defaultConfiguration.delayTimeInMilliSecondsForGatheringEvents,
 		shouldTakeActionOnWatcherCreation = false,
-		underlyingWatchEngineIdToUse = '',
-		shouldNotConnectToAnyUnderlyingEngineOnConstruction = false,
+		underlyingWatchEngineIdToUseInitially = '',
+		shouldNotConnectToAnyUnderlyingEngineOnWatcherCreation = false,
 		shouldLogVerbosely = false,
 	} = constructionOptions;
 
 	let {
+		watchingBasePath,
+		basePathForShorteningPathsInLog,
 		shouldStartWithLessLogs = true,
 	} = constructionOptions;
+
+	if (! watchingBasePath || typeof watchingBasePath !== 'string') {
+		watchingBasePath = process.cwd();
+	}
+
+	if (! basePathForShorteningPathsInLog || typeof basePathForShorteningPathsInLog !== 'string') {
+		basePathForShorteningPathsInLog = watchingBasePath;
+	}
 
 	if (shouldLogVerbosely) {
 		shouldStartWithLessLogs = false;
@@ -103,11 +112,10 @@ function LazyWatcherClass(scopeId, constructionOptions) {
 	let lastUsedUnderlyingWatchEngineId = '';
 	let currentUnderlyingWatchEngineId = '';
 	let currentUnderlyingWatchEngineConnector = null;
-	let normalizedGlobs = [];
-	let printingVersionOfGlobs = [];
+	let printingVersionOfWatchingGlobs = [];
 
 
-	const cachedConnectorsToUsedUnderlyingEngines = {};
+	const cachedConnectorsForAllUsedUnderlyingEnginesSoFar = {};
 	const events = {
 		abstractListenerCandidateFor: {
 			'the "all" event': rememberAnEvent,
@@ -141,12 +149,10 @@ function LazyWatcherClass(scopeId, constructionOptions) {
 		return currentUnderlyingWatchEngineConnector;
 	};
 
-	thisWatcher.getNormalizedGlobs = () => {
-		return [].concat(normalizedGlobs);
-	};
-
-	thisWatcher.getInvolvedFileRecords = () => {
-		return [].concat(knownChangesSoFar);
+	thisWatcher.getInvolvedFileRecordsAfterLastActionStarted = () => {
+		return [
+			...knownChangesSoFar,
+		];
 	};
 
 	thisWatcher.actionIsOnGoing = () => {
@@ -174,6 +180,11 @@ function LazyWatcherClass(scopeId, constructionOptions) {
 
 
 	function init() {
+		printingVersionOfWatchingGlobs = toGetPrintVersionOfGlobs(
+			rawGlobsToWatch,
+			basePathForShorteningPathsInLog
+		);
+
 		if (shouldTakeActionOnWatcherCreation) {
 			takeActionOnce(true, {
 				extraMessage: 'before connecting to any underlying watch engine',
@@ -181,22 +192,14 @@ function LazyWatcherClass(scopeId, constructionOptions) {
 			});
 		}
 
-		if (! shouldNotConnectToAnyUnderlyingEngineOnConstruction) {
-			connectToUnderlyingWatchEngine(underlyingWatchEngineIdToUse);
+		if (! shouldNotConnectToAnyUnderlyingEngineOnWatcherCreation) {
+			connectToUnderlyingWatchEngine(underlyingWatchEngineIdToUseInitially);
 		}
 	}
 
-	function toNormalizeGlobs(rawGlobs, toNormalizeOneGlob) {
-		return rawGlobs.map(toNormalizeOneGlob);
-	}
-
-	function toGetPrintVersionOfGlobs(rawGlobs, toGetPrintVersionOfGlobs) {
-		return rawGlobs.map(toGetPrintVersionOfGlobs);
-	}
-
 	function getConnectorViaEngineId(desiredEngineId, options) {
-		if (cachedConnectorsToUsedUnderlyingEngines[desiredEngineId]) {
-			return cachedConnectorsToUsedUnderlyingEngines[desiredEngineId];
+		if (cachedConnectorsForAllUsedUnderlyingEnginesSoFar[desiredEngineId]) {
+			return cachedConnectorsForAllUsedUnderlyingEnginesSoFar[desiredEngineId];
 		}
 
 		const registeredFactory = registeredFactoriesForConnectorsOfUnderlyingEngines[desiredEngineId];
@@ -206,7 +209,7 @@ function LazyWatcherClass(scopeId, constructionOptions) {
 		}
 
 		const connectorDefinition = registeredFactory(options);
-		cachedConnectorsToUsedUnderlyingEngines[desiredEngineId] = connectorDefinition;
+		cachedConnectorsForAllUsedUnderlyingEnginesSoFar[desiredEngineId] = connectorDefinition;
 
 		return connectorDefinition;
 	}
@@ -223,31 +226,26 @@ function LazyWatcherClass(scopeId, constructionOptions) {
 		}
 
 		desiredEngineId = getValidStringFrom(desiredEngineId);
-		if (!desiredEngineId) {
+		if (! desiredEngineId) {
 			desiredEngineId = lastUsedUnderlyingWatchEngineId || defaultConfiguration.underlyingWatchEngineId;
 		}
 
 		// The statement below might throw to guard arguments.
 		currentUnderlyingWatchEngineConnector = getConnectorViaEngineId(
 			desiredEngineId,
-			Object.assign({}, constructionOptions, options)
+			{
+				...constructionOptions,
+				...options,
+			}
 		);
 
-		normalizedGlobs = toNormalizeGlobs(
-			rawGlobsToWatch,
-			currentUnderlyingWatchEngineConnector.toNormalizeOneGlob
-		);
 
-		printingVersionOfGlobs = toGetPrintVersionOfGlobs(
-			rawGlobsToWatch,
-			currentUnderlyingWatchEngineConnector.toGetPrintVersionOfOneGlob
-		);
 
 		// If nothing was thrown, then we are safe now.
 		currentUnderlyingWatchEngineId = desiredEngineId;
 		currentUnderlyingWatchEngineConnector.listenToEvents(
 			watchingBasePath,
-			normalizedGlobs,
+			rawGlobsToWatch,
 			events
 		);
 
@@ -263,7 +261,7 @@ function LazyWatcherClass(scopeId, constructionOptions) {
 			scopeIdPrintingString
 		} ${chalk.gray('~')}\nWatching glob(s):`);
 
-		LazyWatcherClass.logGlobsAsAList(printingVersionOfGlobs);
+		LazyWatcherClass.logGlobsAsAList(printingVersionOfWatchingGlobs);
 
 		console.log('\n');
 
@@ -369,14 +367,18 @@ function LazyWatcherClass(scopeId, constructionOptions) {
 
 		somethingChangedAfterLastActionStart = true;
 
-		const involvedFileNormalizedPath = currentUnderlyingWatchEngineConnector.toNormalizeOneGlob(involvedFileRawPath);
+		const involvedFileNormalizedPath = pathTool.relative(
+			basePathForShorteningPathsInLog,
+			involvedFileRawPath
+		);
 
 		const fileRecord = {
 			timestamp,
-			typeOfChange: currentUnderlyingWatchEngineConnector.abstractChangeTypeOfRawEventType[typeOfTheChange],
-			rawTypeOfChange: typeOfTheChange,
-			file: involvedFileNormalizedPath,
 			scopeId,
+			typeOfChange:    currentUnderlyingWatchEngineConnector.abstractChangeTypeOfRawEventType[typeOfTheChange],
+			rawTypeOfChange: typeOfTheChange,
+			filePath:        involvedFileNormalizedPath,
+			fileRawPath:     involvedFileRawPath,
 		};
 
 		if (shouldLogVerbosely) {
@@ -500,8 +502,6 @@ LazyWatcherClass.terms = {
 	UNKNOWN_FILE_CHANGE: TERM_FOR_UNKNOWN_FILE_CHANGE,
 };
 
-LazyWatcherClass.defaultMethodToNormalizeOneGlob = rawGlob => rawGlob;
-
 LazyWatcherClass.getPrettyPrintingStringOfScopeId = (scopeId) => {
 	const foldingChar = consoleDoesSupportColors ? ' ' : '"';
 	return chalk.bgYellow.black(`${foldingChar}${scopeId}${foldingChar}`);
@@ -613,7 +613,8 @@ LazyWatcherClass.getPrintStringOfOneInvolvedFile = (fileEventRecord, shouldOmitS
 		timestamp,
 		scopeId,
 		typeOfChange,
-		file,
+		filePath,
+		// fileRawPath,
 	} = fileEventRecord;
 
 
@@ -634,7 +635,7 @@ LazyWatcherClass.getPrintStringOfOneInvolvedFile = (fileEventRecord, shouldOmitS
 	}${
 		termOfEventTypeInAlignedWidth
 	} ${
-		chalk[loggingKeyColor](file)
+		chalk[loggingKeyColor](filePath)
 	}`;
 };
 
@@ -675,8 +676,6 @@ LazyWatcherClass.validateAConnectorDefinition = (connectorToCheck, engineId) => 
 	} = connectorToCheck;
 
 	let {
-		toNormalizeOneGlob,
-		toGetPrintVersionOfOneGlob,
 		removeAllListeners: toRemoveAllListeners,
 	} = connectorToCheck;
 
@@ -776,22 +775,13 @@ LazyWatcherClass.validateAConnectorDefinition = (connectorToCheck, engineId) => 
 		toRemoveAllListeners = createPsuedoMethodForRemovingEventListenersFromAnEngine(engineId);
 	}
 
-	if (typeof toNormalizeOneGlob !== 'function') {
-		toNormalizeOneGlob = LazyWatcherClass.defaultMethodToNormalizeOneGlob;
-	}
-
-	if (typeof toGetPrintVersionOfOneGlob !== 'function') {
-		toGetPrintVersionOfOneGlob = toNormalizeOneGlob;
-	}
 
 
 
 	const validConnector = {
-		toNormalizeOneGlob,
 		abstractChangeTypeOfRawEventType,
 		listenToEvents: toListenToEvents,
 		toRemoveAllListeners,
-		toGetPrintVersionOfOneGlob,
 	};
 
 
@@ -865,5 +855,58 @@ function formatTimestamp(timestamp) {
 	].join(':');
 }
 
+
+function toGetPrintVersionOfGlobs(rawGlobs, basePath) {
+	return rawGlobs.map(
+		rawGlob => toGetPrintVersionOfOneGlob(rawGlob, basePath)
+	);
+}
+
+function toGetPrintVersionOfOneGlob(rawGlob, basePath) {
+	if (basePath && typeof basePath !== 'string') {
+		throw TypeError('The basePath must be either a null or a string.');
+	}
+	if (typeof rawGlob !== 'string') {
+		throw TypeError('A glob must be a string.');
+	}
+
+
+
+
+	if (! basePath) {
+		basePath = '';
+	} else {
+		basePath = basePath.trim();
+	}
+
+	if (! rawGlob && ! basePath) {
+		return '';
+	}
+
+	// 一些文件监测引擎，例如 gaze ，不支持Windows路径。
+	// 而且起码在Windows下不能侦听绝对路径（以“/”开头的路径）的变动。
+	let globToProcess = rawGlob.trim();
+
+	const hasNegativeSign = globToProcess.slice(0, 1) === '!';
+
+	if (hasNegativeSign) {
+		globToProcess = globToProcess.slice(1);
+	}
+
+	let relativeGlob = globToProcess;
+	if (basePath) {
+		relativeGlob = pathTool.relative(basePath, globToProcess);
+	}
+
+	let normalizedGlob = relativeGlob;
+
+	normalizedGlob = normalizedGlob.replace(/\\/g, '/'); // gaze似乎不支持Windows路径
+
+	if (hasNegativeSign) {
+		normalizedGlob = `!${normalizedGlob}`;
+	}
+
+	return normalizedGlob;
+}
 
 module.exports = LazyWatcherClass;

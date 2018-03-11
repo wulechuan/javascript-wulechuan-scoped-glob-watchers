@@ -1,20 +1,14 @@
 const LazyWatcherClass = require('./the-watcher-class');
 
 module.exports = function createWatchersAccordingTo(scopedWatchingSettings, sharedOptions = {
-	// underlyingWatchEngineIdToUse,
-	// watchingBasePath,                 // also allowed to set in each scoped settings
-	// basePathForShorteningPathsInLog,  // also allowed to set in each scoped settings
-	// shouldLogVerbosely,               // also allowed to set in each scoped settings
+	// underlyingWatchEngineIdToUse,    // also allowed to set in each scoped settings
+	// watchingBasePath,                // also allowed to set in each scoped settings
+	// basePathForShorteningPathsInLog, // also allowed to set in each scoped settings
+	// shouldLogVerbosely,              // also allowed to set in each scoped settings
 }) {
-	const defaultSharingOptions = {
-		underlyingWatchEngineIdToUse:    LazyWatcherClass.defaultConfiguration.underlyingWatchEngineId,
-		watchingBasePath:                process.cwd(),
-		basePathForShorteningPathsInLog: process.cwd(),
-		shouldLogVerbosely:              false,
-	};
+	const usedSharingOptions = {
+		underlyingWatchEngineIdToUse: LazyWatcherClass.defaultConfiguration.underlyingWatchEngineId,
 
-	const decidedSharingOptions = {
-		...defaultSharingOptions,
 		...sharedOptions,
 	};
 
@@ -28,7 +22,7 @@ module.exports = function createWatchersAccordingTo(scopedWatchingSettings, shar
 		const scopeSpecificOptions = scopedWatchingSettings[scopeId];
 
 		const lazyWatcherConstructionOptions = {
-			...decidedSharingOptions,
+			...usedSharingOptions,
 			...scopeSpecificOptions,
 		};
 
