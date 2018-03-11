@@ -105,7 +105,7 @@ See below [Try It Out, See It in Action](#try-it-out-see-it-in-action).
 
 See the `gulpfile.js` included by this repository as an example.
 
-Below are the key snippet from the said `gulpfile.js`.
+Below is the key snippet from the said `gulpfile.js`.
 
 ```javascript
 const npmProjectRootPath = prosess.cwd();
