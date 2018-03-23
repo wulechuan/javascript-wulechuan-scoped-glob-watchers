@@ -1,3 +1,6 @@
+<link rel="stylesheet" href="./node_modules/@wulechuan/css-stylus-markdown-themes/dist/default.css">
+
+
 # NPM Page
 
 <dt>Package Name</dt>
@@ -243,6 +246,3 @@ Only some internal APIs changed. Bugs Fixed.
 
 1.  For the **construction options** of watchers,
 	a new property `basePathForShorteningPathsInLog` is added.
-
-
-<link rel="stylesheet" href="./docs/styles/markdown-styles-for-vscode-built-in-preview.min.css">
