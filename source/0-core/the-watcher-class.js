@@ -255,7 +255,7 @@ function LazyWatcherClass(scopeId, constructionOptions) {
 		}
 
 		console.log(`${
-			chalk.bgBlue.black(' Connected Watch Engine ')
+			chalk.bgCyan.black(' Connected Watch Engine ')
 		}${
 			chalk.bgGreen.black(` ${currentUnderlyingWatchEngineId} `)
 		}${

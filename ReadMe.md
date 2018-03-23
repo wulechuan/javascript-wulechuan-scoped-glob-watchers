@@ -1,21 +1,21 @@
 # NPM Page
 
-Package Name: 
+<dt>Package Name</dt>
+<dd>
+
 [@wulechuan/scoped-glob-watchers](https://www.npmjs.com/package/@wulechuan/scoped-glob-watchers)
 
-Author: 南昌吴乐川
+</dd>
+<dt>Author</dt>
+<dd>南昌吴乐川</dd>
+</dl>
 
-<br/>
-<br/>
-<br/>
-<br/>
 
 # Introduction
 
 This is a controller for multiple scoped lazy watchers upon globs/files.
 
-<br/>
-<br/>
+
 
 ## Scopes and Actions
 
@@ -39,8 +39,7 @@ several actions will be taken at the same time.
 
 **_In words, one change might cause multiple actions._**
 
-<br/>
-<br/>
+
 
 ## Lazy Meshanism
 
@@ -63,8 +62,7 @@ Microsoft [Visual Studio Code](https://code.visualstudio.com/).
 When several `.styl` files might change at the same time,
 only one single compilation action is expected to be taken upon all these changes.
 
-<br/>
-<br/>
+
 
 ## Multiple Watchers and One Controller over Them
 
@@ -72,9 +70,6 @@ Obviously we often need several watchers to watch different scopes.
 For conveniences, I build this watchers controller,
 which basically can create and handle multiple watchers in one go,
 each watcher bound to a certain scope, aka some files on your file system.
-
-<br/>
-<br/>
 
 ## Underlying File Watching Engines
 
@@ -84,10 +79,6 @@ as the underlying file watching engine.
 Though theoretically the controller could connect to any other watching engine,
 as long as a connector is provided (which is not).
 
-<br/>
-<br/>
-<br/>
-<br/>
 
 # Usage
 
@@ -99,7 +90,6 @@ before they decide to use it elsewhere.
 
 See below [Try It Out, See It in Action](#try-it-out-see-it-in-action).
 
-<br/>
 
 ## Example Codes
 
@@ -160,8 +150,6 @@ gulp.task('build and then watch: everything', (thisTaskIsDone) => {
 });
 ```
 
-<br/>
-<br/>
 
 ## Try It Out, See It in Action
 
@@ -224,23 +212,13 @@ you should see beautiful messages logged there.
 > that are watched,
 > **not** the source files of this repository.
 
-<br/>
 
-### Some Snapshots of Mine
+### A Snapshot of Mine
 
-Here are some snapshots of my console,
-hosted within Microsoft Visual Studio Code.
+Here is a snapshot of my console,
+hosted within Cygwin.
 
-At the moment the script just starts:
-![Just started](./docs/illustrates/npm-start-snapshot-01.png "right after npm start")
-
-After some changes are made:
-![After Some Changes](./docs/illustrates/npm-start-snapshot-02.png "after some changes are made")
-
-<br/>
-<br/>
-<br/>
-<br/>
+![After Some Changes](./docs/illustrates/scoped-glob-watchers-examples.png "after some changes are made")
 
 # API
 
@@ -250,10 +228,6 @@ I have my boy to take care of.
 Consult my *ugly* source codes if you'd like to. :p
 
 
-<br/>
-<br/>
-<br/>
-<br/>
 
 # Changes from Version to Version
 
@@ -266,12 +240,9 @@ Only some internal APIs changed. Bugs Fixed.
 1.  For the **construction options** of watchers,
 	the property `basePath` has been renamed into `watchingBasePath`.
 
-<br/>
 
 1.  For the **construction options** of watchers,
 	a new property `basePathForShorteningPathsInLog` is added.
 
-<br/>
-<br/>
-<br/>
-<br/>
+
+<link rel="stylesheet" href="./docs/styles/markdown-styles-for-vscode-built-in-preview.min.css">
