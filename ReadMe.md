@@ -91,7 +91,7 @@ utilizing [gulp](https://gulpjs.com/).
 So people can try it out right here inside this repository
 before they decide to use it elsewhere.
 
-See below [Try it out, See it in Action](#try-it-out-see-it-in-action).
+See below [Try It out, See It in Action](#try-it-out-see-it-in-action).
 
 
 ## Example Codes
@@ -154,7 +154,7 @@ gulp.task('build and then watch: everything', (thisTaskIsDone) => {
 ```
 
 
-## Try it out, See it in Action
+## Try It out, See It in Action
 
 There is a dummy project included within this repository,
 so that people can try this watchers controller without difficulty.
