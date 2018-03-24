@@ -91,7 +91,7 @@ utilizing [gulp](https://gulpjs.com/).
 So people can try it out right here inside this repository
 before they decide to use it elsewhere.
 
-See below [Try It Out, See It in Action](#try-it-out-see-it-in-action).
+See below [Try it out, See it in Action](#try-it-out-see-it-in-action).
 
 
 ## Example Codes
