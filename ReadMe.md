@@ -60,7 +60,7 @@ and they are meant to share the single take of the action.
 
 Say we are saving a bunch of files in one go
 via a shortcut key in a powerful code editor,
-like using the "<kbd>Ctrl+k s</kbd>" in
+like using the "<kbd>Ctrl</kbd>+<kbd>k</kbd> <kbd>s</kbd>" in
 Microsoft [Visual Studio Code](https://code.visualstudio.com/).
 When several `.styl` files might change at the same time,
 only one single compilation action is expected to be taken upon all these changes.
@@ -154,7 +154,7 @@ gulp.task('build and then watch: everything', (thisTaskIsDone) => {
 ```
 
 
-## Try It Out, See It in Action
+## Try it out, See it in Action
 
 There is a dummy project included within this repository,
 so that people can try this watchers controller without difficulty.

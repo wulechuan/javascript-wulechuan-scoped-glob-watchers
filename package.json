@@ -1,6 +1,6 @@
 {
   "name": "@wulechuan/scoped-glob-watchers",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "A file/glob lazy watchers controller, with scopes defined, each said scope a watcher.",
   "author": "wulechuan <wulechuan@live.com>",
   "license": "WTFPL",
@@ -34,7 +34,7 @@
     "path": "^0.12.7"
   },
   "devDependencies": {
-    "@wulechuan/css-stylus-markdown-themes": "^1.0.6",
+    "@wulechuan/css-stylus-markdown-themes": "^1.0.8",
     "gulp": "^3.9.1"
   }
 }
