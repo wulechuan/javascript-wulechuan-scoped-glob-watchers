@@ -234,10 +234,7 @@ function LazyWatcherClass(scopeId, constructionOptions) {
 		// The statement below might throw to guard arguments.
 		currentUnderlyingWatchEngineConnector = getConnectorViaEngineId(
 			desiredEngineId,
-			{
-				...constructionOptions,
-				...options,
-			}
+			Object.assign({}, constructionOptions, options)
 		);
 
 

@@ -6,11 +6,13 @@ module.exports = function createWatchersAccordingTo(scopedWatchingSettings, shar
 	// basePathForShorteningPathsInLog, // also allowed to set in each scoped settings
 	// shouldLogVerbosely,              // also allowed to set in each scoped settings
 }) {
-	const usedSharingOptions = {
-		underlyingWatchEngineIdToUse: LazyWatcherClass.defaultConfiguration.underlyingWatchEngineId,
+	const usedSharingOptions = Object.assign(
+		{
+			underlyingWatchEngineIdToUse: LazyWatcherClass.defaultConfiguration.underlyingWatchEngineId,
+		},
 
-		...sharedOptions,
-	};
+		sharedOptions
+	);
 
 	const knownScopeIds = Object.keys(scopedWatchingSettings);
 
@@ -21,10 +23,7 @@ module.exports = function createWatchersAccordingTo(scopedWatchingSettings, shar
 
 		const scopeSpecificOptions = scopedWatchingSettings[scopeId];
 
-		const lazyWatcherConstructionOptions = {
-			...usedSharingOptions,
-			...scopeSpecificOptions,
-		};
+		const lazyWatcherConstructionOptions = Object.assign({}, usedSharingOptions, scopeSpecificOptions);
 
 		watcherInstances[scopeId] = new LazyWatcherClass(scopeId, lazyWatcherConstructionOptions);
 
