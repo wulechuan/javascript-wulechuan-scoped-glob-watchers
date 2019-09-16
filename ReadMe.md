@@ -1,6 +1,3 @@
-<link rel="stylesheet" href="./node_modules/@wulechuan/css-stylus-markdown-themes/dist/default.css">
-
-
 # NPM Page
 
 <dt>Package Name</dt>
