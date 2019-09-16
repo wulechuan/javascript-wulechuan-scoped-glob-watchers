@@ -97,61 +97,60 @@ See below [Try It out, See It in Action](#try-it-out-see-it-in-action).
 
 ### An Example
 
-See the `gulpfile.js` included by this repository as an example.
+See the `try-it-out/a-dummy-project/start.js` included by this repository as an example.
 
-Below is the key snippet from the said `gulpfile.js`.
+Below is the key snippet from the said `start.js`.
 
 ```javascript
-const npmProjectRootPath = prosess.cwd();
+const basePathForShorteningPathsInLog = joinPathPOSIX(
+    npmProjectRootPath,
+    'try-it-out/a-dummy-project'
+)
 
-const scopedGlobsLazilyWatchingMechanism = require('.');
 
 // Three scopes are defined below.
 // And three watchers will be created for them each.
 const scopedWatchingSettings = {
     'My Lovely Images': {
         globsToWatch:                      sourceGlobsOfImagesToWatch,
-        actionToTake:                      taskBodyOfCopyingImages,
+        actionToTake:                      fakeActionOfCopyingImages,
         shouldTakeActionOnWatcherCreation: true,
     },
     'CSS: Stylus': {
         globsToWatch:                      sourceGlobsOfStylusToWatch,
-        actionToTake:                      taskBodyOfCompilingStylus,
+        actionToTake:                      fakeActionOfCompilingStylus,
         shouldTakeActionOnWatcherCreation: true,
     },
     'Javascript': {
+        // This one below overrides the same property in the shared settings.
+        basePathForShorteningPathsInLog:   joinPathPOSIX(basePathForShorteningPathsInLog, 'javascript'),
+
         globsToWatch:                      sourceGlobsOfJavascriptToWatch,
-        actionToTake:                      taskBodyOfCompilingJavascripts,
+        actionToTake:                      fakeActionOfCompilingJavascripts,
         shouldTakeActionOnWatcherCreation: true,
     },
 };
 
-
-gulp.task('build and then watch: everything', (thisTaskIsDone) => {
-    scopedGlobsLazilyWatchingMechanism.createWatchersAccordingTo(
-        scopedWatchingSettings,
+scopedGlobsLazilyWatchingMechanism.createWatchersAccordingTo(
+    scopedWatchingSettings,
 
 
-        // Below is an object containing some shared options across all scopes.
-        // Note that all properties of this object can be optionally set
-        // individually for each and every scope,
-        // overriding values defined here.
-        {
-            // Optional but important. Default to `process.cwd()`
-            watchingBasePath:                npmProjectRootPath,
+    /**
+        Below is an object containing some shared options across all scopes.
+        If a property of same name exists in an scope settings,
+        the value of the scope property will be taken,
+        intead of the one defined below.
+    */
+    {
+        // Optional but important. Default to process.cwd()
+        watchingBasePath: npmProjectRootPath,
 
-            // Optional. Just for better logging.
-            basePathForShorteningPathsInLog: joinPath(
-                npmProjectRootPath,
-                'try-it-out/a-dummy-project'
-            ),
+        // Optional. Just for better logging.
+        basePathForShorteningPathsInLog,
 
-            // shouldLogVerbosely: false,
-        }
-    );
-
-    thisTaskIsDone();
-});
+        shouldLogVerbosely: false,
+    }
+);
 ```
 
 
