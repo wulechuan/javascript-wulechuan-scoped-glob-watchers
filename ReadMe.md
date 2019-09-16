@@ -1,4 +1,8 @@
-# NPM Page
+# Scoped Glob Watchers
+
+
+
+## NPM Page
 
 <dt>Package Name</dt>
 <dd>
@@ -11,13 +15,13 @@
 </dl>
 
 
-# Introduction
+## Introduction
 
 This is a controller for multiple scoped lazy watchers upon globs/files.
 
 
 
-## Scopes and Actions
+### Scopes and Actions
 
 A scope here means one or several globs.
 A given watcher watches every file the said globs cover.
@@ -41,7 +45,7 @@ several actions will be taken at the same time.
 
 
 
-## Lazy Meshanism
+### Lazy Meshanism
 
 A watcher is called a **lazy** one is because when a file changing event issues,
 the watcher doesn't take actions bound to that change immediately,
@@ -64,14 +68,14 @@ only one single compilation action is expected to be taken upon all these change
 
 
 
-## Multiple Watchers and One Controller over Them
+### Multiple Watchers and One Controller over Them
 
 Obviously we often need several watchers to watch different scopes.
 For conveniences, I build this watchers controller,
 which basically can create and handle multiple watchers in one go,
 each watcher bound to a certain scope, aka some files on your file system.
 
-## Underlying File Watching Engines
+### Underlying File Watching Engines
 
 Currently the controller, or the mechanism, whatever,
 utilizes only the [gaze](https://github.com/shama/gaze)
@@ -80,7 +84,7 @@ Though theoretically the controller could connect to any other watching engine,
 as long as a connector is provided (which is not).
 
 
-# Usage
+## Usage
 
 An npm script entry of this repository has been setup
 to run an instance of this watchers controller,
@@ -91,7 +95,7 @@ before they decide to use it elsewhere.
 See below [Try It out, See It in Action](#try-it-out-see-it-in-action).
 
 
-## Example Codes
+### An Example
 
 See the `gulpfile.js` included by this repository as an example.
 
@@ -105,58 +109,59 @@ const scopedGlobsLazilyWatchingMechanism = require('.');
 // Three scopes are defined below.
 // And three watchers will be created for them each.
 const scopedWatchingSettings = {
-	'My Lovely Images': {
-		globsToWatch:                      sourceGlobsOfImagesToWatch,
-		actionToTake:                      taskBodyOfCopyingImages,
-		shouldTakeActionOnWatcherCreation: true,
-	},
-	'CSS: Stylus': {
-		globsToWatch:                      sourceGlobsOfStylusToWatch,
-		actionToTake:                      taskBodyOfCompilingStylus,
-		shouldTakeActionOnWatcherCreation: true,
-	},
-	'Javascript': {
-		globsToWatch:                      sourceGlobsOfJavascriptToWatch,
-		actionToTake:                      taskBodyOfCompilingJavascripts,
-		shouldTakeActionOnWatcherCreation: true,
-	},
+    'My Lovely Images': {
+        globsToWatch:                      sourceGlobsOfImagesToWatch,
+        actionToTake:                      taskBodyOfCopyingImages,
+        shouldTakeActionOnWatcherCreation: true,
+    },
+    'CSS: Stylus': {
+        globsToWatch:                      sourceGlobsOfStylusToWatch,
+        actionToTake:                      taskBodyOfCompilingStylus,
+        shouldTakeActionOnWatcherCreation: true,
+    },
+    'Javascript': {
+        globsToWatch:                      sourceGlobsOfJavascriptToWatch,
+        actionToTake:                      taskBodyOfCompilingJavascripts,
+        shouldTakeActionOnWatcherCreation: true,
+    },
 };
 
 
 gulp.task('build and then watch: everything', (thisTaskIsDone) => {
-	scopedGlobsLazilyWatchingMechanism.createWatchersAccordingTo(
-		scopedWatchingSettings,
+    scopedGlobsLazilyWatchingMechanism.createWatchersAccordingTo(
+        scopedWatchingSettings,
 
 
-		// Below is an object containing some shared options across all scopes.
-		// Note that all properties of this object can be optionally set
-		// individually for each and every scope,
-		// overriding values defined here.
-		{
-			// Optional but important. Default to `process.cwd()`
-			watchingBasePath:                npmProjectRootPath,
+        // Below is an object containing some shared options across all scopes.
+        // Note that all properties of this object can be optionally set
+        // individually for each and every scope,
+        // overriding values defined here.
+        {
+            // Optional but important. Default to `process.cwd()`
+            watchingBasePath:                npmProjectRootPath,
 
-			// Optional. Just for better logging.
-			basePathForShorteningPathsInLog: joinPath(
-				npmProjectRootPath,
-				'try-it-out/a-dummy-project'
-			),
+            // Optional. Just for better logging.
+            basePathForShorteningPathsInLog: joinPath(
+                npmProjectRootPath,
+                'try-it-out/a-dummy-project'
+            ),
 
-			// shouldLogVerbosely: false,
-		}
-	);
+            // shouldLogVerbosely: false,
+        }
+    );
 
-	thisTaskIsDone();
+    thisTaskIsDone();
 });
 ```
 
 
-## Try It out, See It in Action
+### Try It out, See It in Action
 
 There is a dummy project included within this repository,
 so that people can try this watchers controller without difficulty.
 
 The said dummy project locates here:
+
 ```sh
 <this repository root folder>/try-it-out/a-dummy-project
 ```
@@ -171,10 +176,13 @@ you first need to install all dependencies for this npm project.
 > every time before you run the tryout script.
 
 Open a console/terminal and run:
+
 ```sh
 npm install
 ```
+
 or even simpler:
+
 ```sh
 npm i
 ```
@@ -182,12 +190,14 @@ npm i
 #### Run the Tryout Script
 
 Open a console/terminal and run:
+
 ```sh
 npm start
 ```
+
 That's it.
 
-#### What to Try?
+#### What to Try
 
 Now the script is up and running,
 what should we do to see something meaningful?
@@ -213,14 +223,14 @@ you should see beautiful messages logged there.
 > **not** the source files of this repository.
 
 
-### A Snapshot of Mine
+#### A Snapshot of Mine
 
 Here is a snapshot of my console,
 hosted within Cygwin.
 
 ![After Some Changes](./docs/illustrates/scoped-glob-watchers-examples.png "after some changes are made")
 
-# API
+## API
 
 Sorry. I don't have too much spare time at present.
 I have my boy to take care of.
@@ -229,17 +239,22 @@ Consult my *ugly* source codes if you'd like to. :p
 
 
 
-# Changes from Version to Version
+## Changes from Version to Version
 
-## Changes in v0.2.0
+### Changes in v0.2.10
+
+- Try out dummy project no longer use Gulp.
+
+
+### Changes in v0.2.0
 
 Only some internal APIs changed. Bugs Fixed.
 
-## Changes in v0.1.0
 
-1.  For the **construction options** of watchers,
-	the property `basePath` has been renamed into `watchingBasePath`.
+### Changes in v0.1.0
 
+-   For the **construction options** of watchers,
+    the property `basePath` has been renamed into `watchingBasePath`.
 
-1.  For the **construction options** of watchers,
-	a new property `basePathForShorteningPathsInLog` is added.
+-   For the **construction options** of watchers,
+    a new property `basePathForShorteningPathsInLog` is added.

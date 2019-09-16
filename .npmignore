@@ -1,5 +1,5 @@
 .vscode
 .eslintrc*
-/docs
-/try-it-out
-/gulpfile.js
+docs
+try-it-out
+.markdownlint.json
