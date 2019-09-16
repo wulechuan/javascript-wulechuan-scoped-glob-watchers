@@ -15,13 +15,13 @@
   "directories": {
     "tryoutDummyProject": "try-it-out/a-dummy-project"
   },
-  "homepage": "https://github.com/wulechuan/javascript-wulechuan-scoped-glob-watchers#readme",
+  "homepage": "https://github.com/wulechuan/wulechuan-js-scoped-glob-watchers#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wulechuan/javascript-wulechuan-scoped-glob-watchers.git"
+    "url": "git+https://github.com/wulechuan/wulechuan-js-scoped-glob-watchers.git"
   },
   "bugs": {
-    "url": "https://github.com/wulechuan/javascript-wulechuan-scoped-glob-watchers/issues"
+    "url": "https://github.com/wulechuan/wulechuan-js-scoped-glob-watchers/issues"
   },
   "scripts": {
     "gulp": " gulp --gulpfile ./gulpfile.js --silent --",
